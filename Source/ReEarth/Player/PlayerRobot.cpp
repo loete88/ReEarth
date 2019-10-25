@@ -13,7 +13,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
-#include "Player/VRHand/VRHand.h"
 #include "Player/RemoteController/RemoteController.h"
 #include "Engine/EngineTypes.h"
 #include "AIModule/Classes/AIController.h"
