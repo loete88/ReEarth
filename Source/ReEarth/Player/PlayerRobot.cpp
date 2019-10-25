@@ -278,6 +278,11 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 
 void APlayerRobot::InitSpawnHoming()
 {
-	//GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+	HomingArray[(int)EHomingLocation::LeftUp] = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+	HomingArray[(int)EHomingLocation::LeftUp]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftUpHomingPosition"));
+	
 }
 
