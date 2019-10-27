@@ -26,6 +26,14 @@ ARemoteController::ARemoteController()
 	Controller->SetCollisionProfileName(TEXT("NoCollision"));
 	Controller->SetRelativeLocation(FVector(1.5f, 1.5f, 3.0f));
 	//-----------------------------------------------------------------
+
+	//Static Mesh »ý¼º
+	//-----------------------------------------------------------------
+	ControllerComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ControllerComponent"));
+	ControllerComponent->SetupAttachment(Controller);
+	ControllerComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	//-----------------------------------------------------------------
+
 }
 
 void ARemoteController::Pickup(USceneComponent * AttachTo)
