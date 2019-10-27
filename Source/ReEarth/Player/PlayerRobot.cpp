@@ -232,6 +232,22 @@ void APlayerRobot::LockOff()
 
 }
 
+void APlayerRobot::AddEnemy(Enemy * pNewEnemey)
+{
+	if (nullptr != pNewEnemey)
+	{
+		EnemyArray.Add(pNewEnemey);
+	}
+}
+
+void APlayerRobot::RemoveEnemy(Enemy * pRemoveEnemy)
+{
+	if (nullptr != pRemoveEnemy)
+	{
+		EnemyArray.Remove(pRemoveEnemy);
+	}
+}
+
 void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 {
 	//공격 상태일 때만 총알을 생성한다.

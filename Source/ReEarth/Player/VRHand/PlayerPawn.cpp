@@ -233,14 +233,21 @@ void APlayerPawn::Grab(bool IsLeft)
 
 void APlayerPawn::Release(bool IsLeft)
 {
-	if (IsLeft && nullptr != pLeftDropActor)
+	if (IsLeft)
 	{
-		pLeftDropActor->Drop();
+		if (nullptr != pLeftDropActor)
+		{
+			pLeftDropActor->Drop();
+		}
 		LeftVRHandState = EVRHandState::Open;
 	}
-	else if( nullptr != pRightDropActor)
+
+	else
 	{
-		pRightDropActor->Drop();
+		if (nullptr != pRightDropActor)
+		{
+			pRightDropActor->Drop();
+		}
 		RightVRHandState = EVRHandState::Open;
 	}
 }

@@ -9,6 +9,9 @@
 #include "PlayerRobot.generated.h"
 
 
+#define Enemy int
+
+
 //Robot 상태에 대한 Enum값
 //----------------------------------------------
 //Off 상태에서는 Robot의 모든 움직임을 막는다.
@@ -180,6 +183,15 @@ public:
 	//입력 Event 처리 함수
 
 
+
+
+	//EnemyArray에 추가,삭제하는 함수
+	//---------------------------------------------
+	void AddEnemy(Enemy * pNewEnemey);
+	void RemoveEnemy(Enemy * pRemoveEnemy);
+	//---------------------------------------------
+
+
 private:
 	//총 발사시 텀을 주기위한 private변수----------
 	//발사 후 누적 시간을 저장한다.
@@ -191,6 +203,7 @@ private:
 	//유도 미사일 관련 private변수-----------------
 	APlayerHoming * HomingArray[4];
 
+	TArray<Enemy*> EnemyArray;
 	//---------------------------------------------
 
 
