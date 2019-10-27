@@ -112,6 +112,9 @@ void APlayerRobot::BeginPlay()
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld, false), TEXT("RightControllerPosition"));
 
+
+	InitSpawnHoming();
+
 }
 
 // Called every frame
@@ -278,11 +281,43 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 
 void APlayerRobot::InitSpawnHoming()
 {
+	//哭率 困 Homing 积己
 	HomingArray[(int)EHomingLocation::LeftUp] = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
 	HomingArray[(int)EHomingLocation::LeftUp]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld, false), TEXT("LeftUpHomingPosition"));
-	
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+
+
+	//哭率 酒贰 Homing 积己
+	HomingArray[(int)EHomingLocation::LeftDown] = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+	HomingArray[(int)EHomingLocation::LeftDown]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftDownHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+
+
+	//坷弗率 困 Homing 积己
+	HomingArray[(int)EHomingLocation::RightUp] = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+	HomingArray[(int)EHomingLocation::RightUp]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RightUpHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+
+
+	//哭率 酒贰 Homing 积己
+	HomingArray[(int)EHomingLocation::RightDown] = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+	HomingArray[(int)EHomingLocation::RightDown]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RightDownHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
 }
 

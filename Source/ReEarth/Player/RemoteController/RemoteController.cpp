@@ -57,19 +57,23 @@ void ARemoteController::Drop()
 	ACanDropActor::Drop();
 
 	APlayerPawn * pPlayer = (APlayerPawn*)UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	AttachToComponent(pPlayer->pRobot->Seat, FAttachmentTransformRules(
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepWorld, false), TEXT("LeftControllerPosition"));
 
 	pPlayer->pRobot->RobotState = ERobotState::Off;
 
 	if (Side == EControllerSide::Left)
 	{
+		AttachToComponent(pPlayer->pRobot->Seat, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftControllerPosition"));
 		pPlayer->pRobot->LeftAttackState = EHandState::Off;
 	}
 	else
 	{
+		AttachToComponent(pPlayer->pRobot->Seat, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RightControllerPosition"));
 		pPlayer->pRobot->RightAttackState = EHandState::Off;
 	}
 }

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "Player/PlayerRobot.h"
 #include "PlayerRobotAnimation.generated.h"
 
 
@@ -19,20 +18,35 @@ class REEARTH_API UPlayerRobotAnimation : public UAnimInstance
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	APlayerRobot *	PlayerRobot;
+	class APlayerRobot *	PlayerRobot;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float			Velocity;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float			LeftAimYaw;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float			LeftAimPitch;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float			RightAimYaw;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float			RightAimPitch;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool			IsJumping;
+	
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+
+
+private:
+	//SetAimAngle함수
+	//-----------------------------------------------------
+	//해당 손의 WorldRotation값을 가져와서
+	//AimYaw, AimPitch에 값을 넣어준다.
+	//void SetAimAngle(class USkeletalMeshComponent * Hand);
+	//-----------------------------------------------------
 };

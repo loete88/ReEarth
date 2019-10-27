@@ -6,6 +6,17 @@
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
 
+
+//Hand Grab상태에 대한 ENum값
+UENUM(BlueprintType)
+enum class EVRHandState : uint8
+{
+	Open			= 0		UMETA(DisplayName = "Open"),
+	GrabController	= 1		UMETA(DisplayName = "GrabController"),
+	Grab			= 2		UMETA(DisplayName = "Grab")
+};
+
+
 UCLASS()
 class REEARTH_API APlayerPawn : public APawn
 {
@@ -64,6 +75,15 @@ public:
 	//------------------------------------------
 
 
+	//VRHandState
+	//------------------------------------------
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	EVRHandState LeftVRHandState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	EVRHandState RightVRHandState;
+	//------------------------------------------
+
 
 	//입력 Event 처리 함수
 	//---------------------------------------------------
@@ -102,6 +122,10 @@ public:
 	void Release(bool IsLeft);
 	DECLARE_DELEGATE_OneParam(ReleaseDeleGate, bool);
 
+
+	//Homing
+	void HomingShot();
+
 	//Vr없을 때 테스트할 수 있도록 만든 함수
 	void LockOff();
 	//---------------------------------------------------
@@ -110,15 +134,17 @@ public:
 
 
 
-	//VRHand 관련 함수
-	//----------------------------------------------------
-
-
 	//GetActornearHand함수
 	//----------------------------------------------------
 	//가장 가까이 있고 집는 것이 가능한 Actor를 반환해준다.
 	UFUNCTION()
 	class ACanDropActor * GetActorNearHand(bool bIsLeft);
 	//----------------------------------------------------
+
+private:
+	class ACanDropActor * pLeftDropActor;
+	class ACanDropActor * pRightDropActor;
+
+
 
 };
