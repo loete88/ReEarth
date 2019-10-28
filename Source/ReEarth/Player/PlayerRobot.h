@@ -129,6 +129,12 @@ public:
 	class USoundBase * FireSound;
 	//---------------------------------------------------
 
+	//Homing Ready sound로 사용할 SoundCue 가져오기
+	//---------------------------------------------------
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundBase * ReadyHomingSound;
+	//---------------------------------------------------
+
 	//Controller로 사용할 blueprint 가져오기
 	//---------------------------------------------------
 	UPROPERTY(EditAnywhere,Category="Controller")
@@ -138,6 +144,17 @@ public:
 	TSubclassOf<class ARemoteController> RightController_Template;
 	//---------------------------------------------------
 
+	//기본 Aim으로 사용할 blueprint 가져오기
+	//----------------------------------------------------
+	UPROPERTY(EditAnywhere, Category = "Aim")
+	TSubclassOf<AActor> BasicAim_Template;
+	//----------------------------------------------------
+
+	//Homing Aim으로 사용할 blueprint 가져오기
+	//----------------------------------------------------
+	UPROPERTY(EditAnywhere, Category = "Aim")
+	TSubclassOf<AActor> HomingAim_Template;
+	//----------------------------------------------------
 
 	//Controller
 	//---------------------------------------------------
@@ -202,9 +219,17 @@ private:
 	float RightAccumulation = 0;
 	//---------------------------------------------
 
+	//기본 공격 Aim관련 변수-----------------------
+	bool IsLeftAimOn = false;
+	bool IsRightAimOn = false;
+
+	AActor * LeftBasicAim = nullptr;
+	AActor * RightBasicAim = nullptr;
+	//---------------------------------------------
+
 
 	//유도 미사일 관련 private변수-----------------
-	APlayerHoming * HomingArray[4];
+	TArray<class APlayerHoming*> HomingArray;
 
 	//Target으로 가능한 Enemy Array
 	TArray<Enemy*>	EnemyArray;
@@ -217,10 +242,24 @@ private:
 
 	//미사일 최대 범위
 	float			MinHitDist = 1000.0f;
+
+	//생성할 HomingAim 배열
+	//파괴시키기 위해서 들고있는다.
+	TArray<AActor*>	HomingAimArray;
+
+	//미사일 개수가 4개 미만이고
+	//마지막 미사일을 쏜 후 5초가 지나면 새로운 미사일을 생성하기 위해
+	//필요한 Check Time
+	float			HomingTimeCheck =0.0f;
+
+	//미사일을 추가할 위치
+	EHomingLocation CurAddHomingPosition = EHomingLocation::LeftUp;
+
 	//---------------------------------------------
 
 
-
+	//---------------------------------------------
+	void ClearTargetArray();
 
 	//-----------------------------------------------------------------------------------
 	//Shot함수																			//
@@ -237,5 +276,17 @@ private:
 	//InitSpawnHoming함수																//
 	//시작할 때 Homing을 Setting해준다.													//
 	void InitSpawnHoming();																//
+	//-----------------------------------------------------------------------------------
+
+	//-----------------------------------------------------------------------------------
+	//AddSpawnHoming함수
+	void AddSpawnHoming();
+	//-----------------------------------------------------------------------------------
+
+
+	//-----------------------------------------------------------------------------------
+	//Update Aim함수
+	//기본 공격 Aim을 생성해야하면 생성, 소멸시켜야하면 소멸시킨다.
+	void UpdateAim(FName SocketName,bool & AimState, AActor *& AimSide);
 	//-----------------------------------------------------------------------------------
 };

@@ -137,7 +137,6 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction<ReleaseDeleGate>(TEXT("GrabRight"), IE_Released, this, &APlayerPawn::Release, false);
 
 	PlayerInputComponent->BindAction(TEXT("HomingShot"), IE_Pressed, this, &APlayerPawn::HomingShot);
-
 }
 
 
