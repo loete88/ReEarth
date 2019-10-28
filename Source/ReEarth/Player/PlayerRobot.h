@@ -9,7 +9,7 @@
 #include "PlayerRobot.generated.h"
 
 
-#define Enemy int
+#define Enemy AActor
 
 
 //Robot 상태에 대한 Enum값
@@ -177,6 +177,9 @@ public:
 	void Jump();
 	void StopJump();
 
+	//HomingShot
+	void HomingShot();
+
 	//Vr없을 때 테스트할 수 있도록 만든 함수
 	void LockOff();
 	//---------------------------------------------------
@@ -203,7 +206,17 @@ private:
 	//유도 미사일 관련 private변수-----------------
 	APlayerHoming * HomingArray[4];
 
-	TArray<Enemy*> EnemyArray;
+	//Target으로 가능한 Enemy Array
+	TArray<Enemy*>	EnemyArray;
+
+	//Target으로할 Enemy Array
+	TArray<Enemy*>	TargetArray;
+
+	//현재 미사일 개수
+	int				CurrentHomingNum = 4;
+
+	//미사일 최대 범위
+	float			MinHitDist = 1000.0f;
 	//---------------------------------------------
 
 

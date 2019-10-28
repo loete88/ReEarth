@@ -223,6 +223,55 @@ void APlayerRobot::StopJump()
 	StopJumping();
 }
 
+void APlayerRobot::HomingShot()
+{
+	int iLen = EnemyArray.Num();
+
+
+	//TargetArray Setting
+	//--------------------------------------------------
+	//1. 전체 EnemyArray 순환
+	for (int iCnt = 0; iCnt < iLen; ++iCnt)
+	{
+		//2. 미사일이 없으면 break
+		if (0 == CurrentHomingNum)
+		{
+			break;
+		}
+
+		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
+		float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
+
+		
+		//4. 미사일 허용 범위안에 들어오고
+		//현재 카메라에 보이는 상태면 TargetArray에 추가
+		if (fDistance < MinHitDist && WasRecentlyRendered(0.0f))
+		{
+			TargetArray.Add(EnemyArray[iCnt]);
+
+			//5. 미사일 개수 갱신
+			--CurrentHomingNum;
+		}
+	}
+	//--------------------------------------------------
+	//TargetArray Setting
+
+
+
+	//Homing Setting
+	//---------------------------------------------------
+	//1. 전체 TargetArray 순환
+	iLen = TargetArray.Num();
+
+	for (int iCnt = 0; iCnt < iLen; ++iCnt)
+	{
+
+	}
+
+	//---------------------------------------------------
+	//Homing Setting
+}
+
 void APlayerRobot::LockOff()
 {
 	//vr없을 때 test용

@@ -41,20 +41,23 @@ void ARemoteController::Pickup(USceneComponent * AttachTo)
 	ACanDropActor::Pickup(AttachTo);
 
 
-	AttachToComponent(AttachTo, FAttachmentTransformRules(
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepWorld,false),TEXT("RemotePosition"));
-
 	APlayerPawn * pPlayer = (APlayerPawn*)UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	pPlayer->pRobot->RobotState = ERobotState::Normal;
 	
 	if (Side == EControllerSide::Left)
 	{
+		AttachToComponent(AttachTo, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftRemotePosition"));
 		pPlayer->pRobot->LeftAttackState = EHandState::Attackable;
 	}
 	else
 	{
+		AttachToComponent(AttachTo, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RemotePosition"));
 		pPlayer->pRobot->RightAttackState = EHandState::Attackable;
 	}
 
