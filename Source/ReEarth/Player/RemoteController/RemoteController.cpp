@@ -57,7 +57,7 @@ void ARemoteController::Pickup(USceneComponent * AttachTo)
 		AttachToComponent(AttachTo, FAttachmentTransformRules(
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
-			EAttachmentRule::KeepWorld, false), TEXT("RemotePosition"));
+			EAttachmentRule::KeepWorld, false), TEXT("RightRemotePosition"));
 		pPlayer->pRobot->RightAttackState = EHandState::Attackable;
 	}
 

@@ -223,8 +223,8 @@ private:
 	bool IsLeftAimOn = false;
 	bool IsRightAimOn = false;
 
-	AActor * LeftBasicAim = nullptr;
-	AActor * RightBasicAim = nullptr;
+	class ANormalAim * LeftBasicAim = nullptr;
+	class ANormalAim * RightBasicAim = nullptr;
 	//---------------------------------------------
 
 
@@ -287,6 +287,6 @@ private:
 	//-----------------------------------------------------------------------------------
 	//Update Aim함수
 	//기본 공격 Aim을 생성해야하면 생성, 소멸시켜야하면 소멸시킨다.
-	void UpdateAim(FName SocketName,bool & AimState, AActor *& AimSide);
+	void UpdateAim(FName SocketName,bool & AimState, class ANormalAim *& AimSide);
 	//-----------------------------------------------------------------------------------
 };

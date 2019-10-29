@@ -16,7 +16,7 @@
 #include "PickUPActorInterface.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
-
+#include "Player/RemoteController/RemoteController.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -197,11 +197,19 @@ void APlayerPawn::StopJump()
 void APlayerPawn::Grab(bool IsLeft)
 {
 	ACanDropActor * AttachedActor = nullptr;
+	ARemoteController * Controller;
 	if (IsLeft)
 	{
 		ACanDropActor * NearestActor = GetActorNearHand(IsLeft);
 		if (nullptr != NearestActor)
 		{
+			Controller = (ARemoteController*)NearestActor;
+			if (Controller->Side == EControllerSide::Right)
+			{
+				LeftVRHandState = EVRHandState::Grab;
+				return;
+			}
+
 			AttachedActor = NearestActor;
 			AttachedActor->Pickup(LeftHandMesh);
 			pLeftDropActor = NearestActor;
@@ -216,8 +224,16 @@ void APlayerPawn::Grab(bool IsLeft)
 	{
 		ACanDropActor * NearestActor = GetActorNearHand(IsLeft);
 
+
 		if (nullptr != NearestActor)
 		{
+			Controller = (ARemoteController*)NearestActor;
+			if (Controller->Side == EControllerSide::Left)
+			{
+				RightVRHandState = EVRHandState::Grab;
+				return;
+			}
+
 			AttachedActor = NearestActor;
 			AttachedActor->Pickup(RightHandMesh);
 			pRightDropActor = NearestActor;

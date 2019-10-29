@@ -19,6 +19,8 @@
 #include "AIModule/Classes/AIController.h"
 #include "Player/PlayerHoming.h"
 #include "TimerManager.h"
+#include "Player/UI/Aim/NormalAimWidgetBase.h"
+#include "Player/UI/NormalAim.h"
 
 #define df_FIRE_DURATION 0.12f
 
@@ -141,6 +143,7 @@ void APlayerRobot::Tick(float DeltaTime)
 	//플레이어 미사일 생성 Logic
 
 
+	UpdateAim(TEXT("LeftShotPosition"), IsLeftAimOn, LeftBasicAim);
 
 }
 
@@ -395,6 +398,14 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			GetWorld()->SpawnActor<APlayerBullet>(Bullet_Template, ShotLocation, ShotRotator);
 			//--------------------------------------------------------------------------------
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ShotLocation);
+
+	
+
+			//TESTTEST
+			if(nullptr != LeftBasicAim)
+				LeftBasicAim->PlayAnimation();
+			//TESTTEST
+
 		}
 		
 		//2. 오른쪽인 경우
@@ -412,6 +423,11 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			FVector ShotLocation = ShotTransform.GetLocation();
 			FRotator ShotRotator = ShotTransform.GetRotation().Rotator();
 			GetWorld()->SpawnActor<APlayerBullet>(Bullet_Template, ShotLocation, ShotRotator);
+
+			//TESTTEST
+			RightBasicAim->PlayAnimation();
+			//TESTTEST
+
 		}
 	}
 }
@@ -519,7 +535,7 @@ void APlayerRobot::AddSpawnHoming()
 	}
 }
 
-void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, AActor *& AimSide)
+void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& AimSide)
 {
 	//Check할 시작점 끝점 Setting
 	FVector SocketPosition = GetMesh()->GetSocketLocation(SocketName);
@@ -547,13 +563,12 @@ void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, AActor *& AimSid
 		EDrawDebugTrace::None,
 		OutHit,
 		true);
-
 	//적이 Check 됐을 때 Aim 생성
 	if (IsResult)
 	{
 		AActor * HitActor = OutHit.GetActor();
 		FRotator HitActorRotator = HitActor->GetActorRotation();
-		FVector HitActorLocation = HitActor->GetActorLocation();
+		FVector HitActorLocation = OutHit.Location;
 
 		FRotator LookPlayerRotation = UKismetMathLibrary::FindLookAtRotation(HitActorLocation, GetActorLocation());
 		FVector LookPlayerVector = UKismetMathLibrary::GetForwardVector(LookPlayerRotation);
@@ -569,11 +584,9 @@ void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, AActor *& AimSid
 		//Aim 생성
 		else
 		{
+			AimSide = GetWorld()->SpawnActor<ANormalAim>(BasicAim_Template, SpawnAimLocation, LookPlayerRotation);
 			
-			AimSide = GetWorld()->SpawnActor<AActor>(BasicAim_Template, SpawnAimLocation, LookPlayerRotation);
-
 			AimState = true;
-
 		}
 	}
 	else
