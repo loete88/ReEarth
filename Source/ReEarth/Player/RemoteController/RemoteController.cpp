@@ -26,6 +26,14 @@ ARemoteController::ARemoteController()
 	Controller->SetCollisionProfileName(TEXT("NoCollision"));
 	Controller->SetRelativeLocation(FVector(1.5f, 1.5f, 3.0f));
 	//-----------------------------------------------------------------
+
+	//Static Mesh »ý¼º
+	//-----------------------------------------------------------------
+	ControllerComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ControllerComponent"));
+	ControllerComponent->SetupAttachment(Controller);
+	ControllerComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	//-----------------------------------------------------------------
+
 }
 
 void ARemoteController::Pickup(USceneComponent * AttachTo)
@@ -33,20 +41,23 @@ void ARemoteController::Pickup(USceneComponent * AttachTo)
 	ACanDropActor::Pickup(AttachTo);
 
 
-	AttachToComponent(AttachTo, FAttachmentTransformRules(
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepWorld,false),TEXT("RemotePosition"));
-
 	APlayerPawn * pPlayer = (APlayerPawn*)UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	pPlayer->pRobot->RobotState = ERobotState::Normal;
 	
 	if (Side == EControllerSide::Left)
 	{
+		AttachToComponent(AttachTo, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftRemotePosition"));
 		pPlayer->pRobot->LeftAttackState = EHandState::Attackable;
 	}
 	else
 	{
+		AttachToComponent(AttachTo, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RemotePosition"));
 		pPlayer->pRobot->RightAttackState = EHandState::Attackable;
 	}
 
@@ -57,19 +68,23 @@ void ARemoteController::Drop()
 	ACanDropActor::Drop();
 
 	APlayerPawn * pPlayer = (APlayerPawn*)UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	AttachToComponent(pPlayer->pRobot->Seat, FAttachmentTransformRules(
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepWorld, false), TEXT("LeftControllerPosition"));
 
 	pPlayer->pRobot->RobotState = ERobotState::Off;
 
 	if (Side == EControllerSide::Left)
 	{
+		AttachToComponent(pPlayer->pRobot->Seat, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftControllerPosition"));
 		pPlayer->pRobot->LeftAttackState = EHandState::Off;
 	}
 	else
 	{
+		AttachToComponent(pPlayer->pRobot->Seat, FAttachmentTransformRules(
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RightControllerPosition"));
 		pPlayer->pRobot->RightAttackState = EHandState::Off;
 	}
 }

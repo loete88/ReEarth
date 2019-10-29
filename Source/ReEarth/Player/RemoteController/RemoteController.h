@@ -41,6 +41,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent * Controller;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent * ControllerComponent;
 	//---------------------------------------------
 	//Component
 

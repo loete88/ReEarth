@@ -74,6 +74,13 @@ APlayerPawn::APlayerPawn()
 	Camera->SetupAttachment(Scene);
 	Camera->SetRelativeLocation(FVector(0.0f, 4.0f, 40.0f));
 	//------------------------------------------------------------
+
+
+	//VRHandState ¼³Á¤
+	//-------------------------------------------------------------
+	LeftVRHandState = EVRHandState::Open;
+	RightVRHandState = EVRHandState::Open;
+	//-------------------------------------------------------------
 }
 
 // Called when the game starts or when spawned
@@ -107,7 +114,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveFront"), this, &APlayerPawn::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerPawn::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &APlayerPawn::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("ViewYaw"), this, &APlayerPawn::ViewYaw);
 
@@ -129,6 +136,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction<GrabDeleGate>(TEXT("GrabRight"), IE_Pressed, this, &APlayerPawn::Grab, false);
 	PlayerInputComponent->BindAction<ReleaseDeleGate>(TEXT("GrabRight"), IE_Released, this, &APlayerPawn::Release, false);
 
+	PlayerInputComponent->BindAction(TEXT("HomingShot"), IE_Pressed, this, &APlayerPawn::HomingShot);
 }
 
 
@@ -191,29 +199,61 @@ void APlayerPawn::Grab(bool IsLeft)
 	ACanDropActor * AttachedActor = nullptr;
 	if (IsLeft)
 	{
-		//ACanDropActor * NearestActor = GetActorNearHand(IsLeft);
-		//UE_LOG(LogClass, Warning, TEXT("%"), *(NearestActor->GetClass()->GetName()));
-		/*if (nullptr != NearestActor)
+		ACanDropActor * NearestActor = GetActorNearHand(IsLeft);
+		if (nullptr != NearestActor)
 		{
 			AttachedActor = NearestActor;
 			AttachedActor->Pickup(LeftHandMesh);
-		}*/
+			pLeftDropActor = NearestActor;
+			LeftVRHandState = EVRHandState::GrabController;
+		}
+		else
+		{
+			LeftVRHandState = EVRHandState::Grab;
+		}
 	}
 	else
 	{
 		ACanDropActor * NearestActor = GetActorNearHand(IsLeft);
 
-		//if (nullptr != NearestActor)
-		//{
-		//	UE_LOG(LogClass, Warning, TEXT("Tttteretet"));
-		//	/*AttachedActor = NearestActor;
-		//	AttachedActor->Pickup(RightHandMesh);*/
-		//}
+		if (nullptr != NearestActor)
+		{
+			AttachedActor = NearestActor;
+			AttachedActor->Pickup(RightHandMesh);
+			pRightDropActor = NearestActor;
+			RightVRHandState = EVRHandState::GrabController;
+		}
+		else
+		{
+			RightVRHandState = EVRHandState::Grab;
+		}
 	}
 }
 
 void APlayerPawn::Release(bool IsLeft)
 {
+	if (IsLeft)
+	{
+		if (nullptr != pLeftDropActor)
+		{
+			pLeftDropActor->Drop();
+		}
+		LeftVRHandState = EVRHandState::Open;
+	}
+
+	else
+	{
+		if (nullptr != pRightDropActor)
+		{
+			pRightDropActor->Drop();
+		}
+		RightVRHandState = EVRHandState::Open;
+	}
+}
+
+void APlayerPawn::HomingShot()
+{
+
 }
 
 void APlayerPawn::LockOff()

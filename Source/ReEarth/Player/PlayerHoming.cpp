@@ -56,3 +56,7 @@ void APlayerHoming::Tick(float DeltaTime)
 
 }
 
+void APlayerHoming::Shot(AActor * Target)
+{
+}
+

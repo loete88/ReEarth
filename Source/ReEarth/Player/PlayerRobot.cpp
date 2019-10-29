@@ -11,11 +11,14 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetArrayLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "Player/RemoteController/RemoteController.h"
 #include "Engine/EngineTypes.h"
 #include "AIModule/Classes/AIController.h"
+#include "Player/PlayerHoming.h"
+#include "TimerManager.h"
 
 #define df_FIRE_DURATION 0.12f
 
@@ -31,6 +34,7 @@ APlayerRobot::APlayerRobot()
 	GetCapsuleComponent()->SetCapsuleSize(150.0f, 300.0f);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 	//---------------------------------------------------------------------------
+	
 
 	//Mesh 위치 조정 및 크기 설정
 	//---------------------------------------------------------------------------
@@ -95,6 +99,7 @@ void APlayerRobot::BeginPlay()
 	RightAttackState = EHandState::Off;
 	//-------------------------------------
 
+	
 
 
 	//Controller 생성하기
@@ -110,8 +115,10 @@ void APlayerRobot::BeginPlay()
 	RightController->AttachToComponent(Seat,
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
-			EAttachmentRule::KeepWorld, false), TEXT("RightControllerPosition"));
+			EAttachmentRule::KeepWorld, false),TEXT("RightControllerPosition"));
 
+
+	InitSpawnHoming();
 }
 
 // Called every frame
@@ -123,9 +130,18 @@ void APlayerRobot::Tick(float DeltaTime)
 	//-------------------------------------------
 	Shot(LeftAttackState,DeltaTime,true);
 	Shot(RightAttackState,DeltaTime,false);
-
 	//-------------------------------------------
 	//플레이어 총 발사 Logic
+
+
+	//플레이어 미사일 생성 Logic
+	//-------------------------------------------
+	AddSpawnHoming();
+	//-------------------------------------------
+	//플레이어 미사일 생성 Logic
+
+
+
 }
 
 // Called to bind functionality to input
@@ -220,6 +236,102 @@ void APlayerRobot::StopJump()
 	StopJumping();
 }
 
+void APlayerRobot::HomingShot()
+{
+	int iLen = EnemyArray.Num();
+
+
+	//TargetArray Setting
+	//--------------------------------------------------
+	//1. 전체 EnemyArray 순환
+	for (int iCnt = 0; iCnt < iLen; ++iCnt)
+	{
+		//2. 미사일이 없으면 break
+		if (0 == CurrentHomingNum)
+		{
+			break;
+		}
+
+		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
+		float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
+
+		
+		//4. 미사일 허용 범위안에 들어오고
+		//현재 카메라에 보이는 상태면 TargetArray에 추가
+		if (fDistance < MinHitDist && WasRecentlyRendered(0.0f))
+		{
+			TargetArray.Add(EnemyArray[iCnt]);
+
+			//5. 미사일 개수 갱신
+			--CurrentHomingNum;
+		}
+	}
+	//--------------------------------------------------
+	//TargetArray Setting
+
+
+
+	//Homing Setting
+	//---------------------------------------------------
+	//1. 전체 TargetArray 순환
+	iLen = TargetArray.Num();
+
+	for (int iCnt = 0; iCnt < iLen; ++iCnt)
+	{
+		////2. HomingAim 생성
+		//	//2-1 HomingPosition 가져오기(미사일 맞을 위치)
+		//USceneComponent * HomingPosition = TargetArray[iCnt]->HomingPosition;
+		//FVector ActorHitPosition = HomingPosition->GetComponentLocation();
+		//
+		//	//2-2 Aim이 Player를 바라보는 Rotator 가져오기
+		//FRotator LookPlayerRotation = UKismetMathLibrary::FindLookAtRotation(ActorHitPosition, GetActorLocation());
+		//
+		//	//2-3 Aim을 Transform 생성
+		////위치는 HomingPosition + Aim이 Player를 바라보는 Forward Vector
+		//FVector AimLocation = ActorHitPosition + UKismetMathLibrary::GetForwardVector(LookPlayerRotation) * 300;
+		////각도는 Aim이 Player를 바라보도록 그냥 LookPlayerRotation
+		//FTransform AimTransform = UKismetMathLibrary::MakeTransform(AimLocation, LookPlayerRotation,FVector(1.0f,1.0f,1.0f));
+
+		//	//2-4 HomingAim Spawn
+		//AActor * pNewHomingAim = GetWorld()->SpawnActor<AActor>(HomingAim_Template, AimTransform);
+
+		////3. HomingAimArray에 넣고 나중에 한번에 소멸시킨다.
+		//HomingAimArray.Add(pNewHomingAim);
+
+
+		////4. 미사일 Detach
+		//HomingArray[0]->GetRootComponent()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+
+		//5. Play Sound
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReadyHomingSound, GetActorLocation());
+
+		//6. 미사일에게 Shot명령
+		HomingArray[0]->Shot(TargetArray[iCnt]);
+
+		//7. 발사한 미사일 HomingArray에서 제거
+		HomingArray.Remove(HomingArray[0]);
+
+	}
+	//---------------------------------------------------
+	//Homing Setting
+
+	
+
+	//필요한 & 사용한 변수들 갱신
+	//----------------------------------------------------
+	HomingTimeCheck = UGameplayStatics::GetTimeSeconds(GetWorld());
+
+	//TargetArray클리어
+	TargetArray.Empty();
+
+	//Homing Aim을 보여주기위한 약간의 Delay
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerRobot::ClearTargetArray, 1.0f, false);
+	//----------------------------------------------------
+	//필요한 & 사용한 변수들 갱신
+}
+
+
 void APlayerRobot::LockOff()
 {
 	//vr없을 때 test용
@@ -227,6 +339,34 @@ void APlayerRobot::LockOff()
 	LeftAttackState = EHandState::Attackable;
 	RightAttackState = EHandState::Attackable;
 
+}
+
+void APlayerRobot::AddEnemy(Enemy * pNewEnemey)
+{
+	if (nullptr != pNewEnemey)
+	{
+		EnemyArray.Add(pNewEnemey);
+	}
+}
+
+void APlayerRobot::RemoveEnemy(Enemy * pRemoveEnemy)
+{
+	if (nullptr != pRemoveEnemy)
+	{
+		EnemyArray.Remove(pRemoveEnemy);
+	}
+}
+
+void APlayerRobot::ClearTargetArray()
+{
+	int iLen = HomingAimArray.Num();
+
+	for (int iCnt = 0; iCnt < iLen; ++iCnt)
+	{
+		HomingAimArray[iCnt]->K2_DestroyActor();
+	}
+
+	HomingAimArray.Empty();
 }
 
 void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
@@ -278,6 +418,173 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 
 void APlayerRobot::InitSpawnHoming()
 {
-	//GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+	//왼쪽 위 Homing 생성
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray[(int)EHomingLocation::LeftUp]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftUpHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+
+
+	//왼쪽 아래 Homing 생성
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray[(int)EHomingLocation::LeftDown]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("LeftDownHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+
+
+	//오른쪽 위 Homing 생성
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray[(int)EHomingLocation::RightUp]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RightUpHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+
+
+	//왼쪽 아래 Homing 생성
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray[(int)EHomingLocation::RightDown]->AttachToComponent(GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), TEXT("RightDownHomingPosition"));
+	//----------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------
+}
+
+void APlayerRobot::AddSpawnHoming()
+{
+	float CurTime = UGameplayStatics::GetTimeSeconds(GetWorld());
+	float LastShotTime = HomingTimeCheck;
+
+	//마지막으로 쏜지 5초가 지났고 현재 미사일 개수가 4개 미만일 때 생성
+	if (CurTime - LastShotTime >= 5.0f && CurrentHomingNum < 4)
+	{
+		APlayerHoming * pNewHoming = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
+
+		FName HomingPosition;
+		switch (CurAddHomingPosition)
+		{
+		case EHomingLocation::LeftUp:
+		{
+			HomingPosition = TEXT("LeftUpHomingPosition");
+			CurAddHomingPosition = EHomingLocation::LeftDown;
+		}
+		break;
+
+		case EHomingLocation::LeftDown:
+		{
+			HomingPosition = TEXT("LeftDownHomingPosition");
+			CurAddHomingPosition = EHomingLocation::RightUp;
+		}
+		break;
+
+		case EHomingLocation::RightUp:
+		{
+			HomingPosition = TEXT("RightUpHomingPosition");
+			CurAddHomingPosition = EHomingLocation::RightDown;
+		}
+		break;
+
+		case EHomingLocation::RightDown:
+		{
+			HomingPosition = TEXT("RightDownHomingPosition");
+			CurAddHomingPosition = EHomingLocation::LeftUp;
+		}
+		break;
+
+		default:
+			break;
+
+		}
+
+		pNewHoming->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld, false), HomingPosition);
+
+
+		HomingTimeCheck = UGameplayStatics::GetTimeSeconds(GetWorld());
+		++CurrentHomingNum;
+		
+
+		HomingArray.Add(pNewHoming);
+
+
+	}
+}
+
+void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, AActor *& AimSide)
+{
+	//Check할 시작점 끝점 Setting
+	FVector SocketPosition = GetMesh()->GetSocketLocation(SocketName);
+	FRotator SocketRotator = GetMesh()->GetSocketRotation(SocketName);
+	FVector SocketForwardVector = UKismetMathLibrary::GetForwardVector(SocketRotator);
+
+	SocketForwardVector = SocketForwardVector * 10000.0f;
+	FVector EndLocation = SocketPosition + SocketForwardVector;
+
+	//Check할 물체 타입 설정
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectType;
+	ObjectType.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel3));
+
+
+	TArray<AActor*> IgnoreActors;
+	IgnoreActors.Add(this);
+
+	FHitResult OutHit;
+
+	bool IsResult = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), SocketPosition,
+		EndLocation,
+		ObjectType,
+		false,
+		IgnoreActors,
+		EDrawDebugTrace::None,
+		OutHit,
+		true);
+
+	//적이 Check 됐을 때 Aim 생성
+	if (IsResult)
+	{
+		AActor * HitActor = OutHit.GetActor();
+		FRotator HitActorRotator = HitActor->GetActorRotation();
+		FVector HitActorLocation = HitActor->GetActorLocation();
+
+		FRotator LookPlayerRotation = UKismetMathLibrary::FindLookAtRotation(HitActorLocation, GetActorLocation());
+		FVector LookPlayerVector = UKismetMathLibrary::GetForwardVector(LookPlayerRotation);
+		FVector SpawnAimLocation = LookPlayerVector * 200 + HitActorLocation;
+
+		//Aim이 이미 생성돼있는 상태면 Aim 위치 Update
+		if (AimState)
+		{
+			AimSide->SetActorTransform(UKismetMathLibrary::MakeTransform(SpawnAimLocation,
+				LookPlayerRotation, FVector(1.0f, 1.0f, 1.0f)));
+		}
+
+		//Aim 생성
+		else
+		{
+			
+			AimSide = GetWorld()->SpawnActor<AActor>(BasicAim_Template, SpawnAimLocation, LookPlayerRotation);
+
+			AimState = true;
+
+		}
+	}
+	else
+	{
+		if (AimState)
+		{
+			AimSide->Destroy();
+			AimSide = nullptr;
+			AimState = false;
+		}
+	}
+
 }
 
