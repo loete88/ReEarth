@@ -111,6 +111,13 @@ public:
 	//상태 관련 멤버 변수
 
 
+	//체력 관련 멤버 변수
+	//---------------------------------------------------
+	float MaxHP = 100;
+	float CurrentHP = 100;
+	//---------------------------------------------------
+	//체력 관련 멤버 변수
+
 	//Bullet으로 사용할 blueprint 가져오기
 	//---------------------------------------------------
 	UPROPERTY(EditAnywhere, Category = "Bullet")
@@ -147,7 +154,10 @@ public:
 	//기본 Aim으로 사용할 blueprint 가져오기
 	//----------------------------------------------------
 	UPROPERTY(EditAnywhere, Category = "Aim")
-	TSubclassOf<AActor> BasicAim_Template;
+	TSubclassOf<AActor> BasicLeftAim_Template;
+
+	UPROPERTY(EditAnywhere, Category = "Aim")
+	TSubclassOf<AActor> BasicRightAim_Template;
 	//----------------------------------------------------
 
 	//Homing Aim으로 사용할 blueprint 가져오기
@@ -202,8 +212,13 @@ public:
 	//---------------------------------------------------
 	//입력 Event 처리 함수
 
-
-
+	
+	//Damage처리 함수
+	//----------------------------------------------------
+	void ReceiveAnyDamage(float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void DamageProc(float Damage);
+	//----------------------------------------------------
+	//Damage처리 함수
 
 	//EnemyArray에 추가,삭제하는 함수
 	//---------------------------------------------
@@ -287,6 +302,6 @@ private:
 	//-----------------------------------------------------------------------------------
 	//Update Aim함수
 	//기본 공격 Aim을 생성해야하면 생성, 소멸시켜야하면 소멸시킨다.
-	void UpdateAim(FName SocketName,bool & AimState, class ANormalAim *& AimSide);
+	void UpdateAim(FName SocketName,bool & AimState, class ANormalAim *& AimSide,bool IsLeft);
 	//-----------------------------------------------------------------------------------
 };

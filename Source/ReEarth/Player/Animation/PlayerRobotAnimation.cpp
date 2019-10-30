@@ -37,9 +37,11 @@ void UPlayerRobotAnimation::NativeUpdateAnimation(float DeltaSeconds)
 			{
 				USkeletalMeshComponent * LeftHandMesh = pPlayerPawn->LeftHandMesh;
 
+
+
 				//3. Pitch, Yaw°ª Setting
 				FRotator HandRotator = LeftHandMesh->K2_GetComponentRotation();
-				LeftAimYaw = HandRotator.Yaw;
+				LeftAimYaw = HandRotator.Yaw - PlayerRobot->K2_GetActorRotation().Yaw;
 				LeftAimPitch = HandRotator.Pitch;
 				//UE_LOG(LogClass, Warning,TEXT("%f"), LeftAimYaw);
 			}
@@ -56,7 +58,7 @@ void UPlayerRobotAnimation::NativeUpdateAnimation(float DeltaSeconds)
 				USkeletalMeshComponent * RightHandMesh = pPlayerPawn->RightHandMesh;
 
 				FRotator HandRotator = RightHandMesh->K2_GetComponentRotation();
-				RightAimYaw = HandRotator.Yaw;
+				RightAimYaw = HandRotator.Yaw - PlayerRobot->K2_GetActorRotation().Yaw;
 				RightAimPitch = HandRotator.Pitch;
 			}
 		}

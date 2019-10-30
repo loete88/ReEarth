@@ -10,6 +10,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "HeadMountedDisplay.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -137,6 +138,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction<ReleaseDeleGate>(TEXT("GrabRight"), IE_Released, this, &APlayerPawn::Release, false);
 
 	PlayerInputComponent->BindAction(TEXT("HomingShot"), IE_Pressed, this, &APlayerPawn::HomingShot);
+
+	PlayerInputComponent->BindAction(TEXT("VRReset"), IE_Pressed, this, &APlayerPawn::VRReset);
 }
 
 
@@ -197,14 +200,14 @@ void APlayerPawn::StopJump()
 void APlayerPawn::Grab(bool IsLeft)
 {
 	ACanDropActor * AttachedActor = nullptr;
-	ARemoteController * Controller;
+	ARemoteController * RemoteController;
 	if (IsLeft)
 	{
 		ACanDropActor * NearestActor = GetActorNearHand(IsLeft);
 		if (nullptr != NearestActor)
 		{
-			Controller = (ARemoteController*)NearestActor;
-			if (Controller->Side == EControllerSide::Right)
+			RemoteController = (ARemoteController*)NearestActor;
+			if (RemoteController->Side == EControllerSide::Right)
 			{
 				LeftVRHandState = EVRHandState::Grab;
 				return;
@@ -227,8 +230,8 @@ void APlayerPawn::Grab(bool IsLeft)
 
 		if (nullptr != NearestActor)
 		{
-			Controller = (ARemoteController*)NearestActor;
-			if (Controller->Side == EControllerSide::Left)
+			RemoteController = (ARemoteController*)NearestActor;
+			if (RemoteController->Side == EControllerSide::Left)
 			{
 				RightVRHandState = EVRHandState::Grab;
 				return;
@@ -270,6 +273,11 @@ void APlayerPawn::Release(bool IsLeft)
 void APlayerPawn::HomingShot()
 {
 
+}
+
+void APlayerPawn::VRReset()
+{
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
 void APlayerPawn::LockOff()
