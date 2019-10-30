@@ -48,7 +48,10 @@ void APlayerBullet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Trail, GetActorLocation(),FRotator::ZeroRotator,9.0f);
+
+	UGameplayStatics::SpawnEmitterAttached(Trail, Bullet,TEXT("BulletEnd"));
+
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Trail, GetActorLocation(),FRotator::ZeroRotator,9.0f);
 
 	SetLifeSpan(3.0f);
 	

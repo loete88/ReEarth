@@ -143,7 +143,8 @@ void APlayerRobot::Tick(float DeltaTime)
 	//플레이어 미사일 생성 Logic
 
 
-	UpdateAim(TEXT("LeftShotPosition"), IsLeftAimOn, LeftBasicAim);
+	UpdateAim(TEXT("LeftShotPosition"), IsLeftAimOn, LeftBasicAim,true);
+	UpdateAim(TEXT("RightShotPosition"), IsRightAimOn, RightBasicAim,false);
 
 }
 
@@ -344,6 +345,41 @@ void APlayerRobot::LockOff()
 
 }
 
+void APlayerRobot::ReceiveAnyDamage(float Damage, const UDamageType * DamageType, AController * InstigatedBy, AActor * DamageCauser)
+{
+	Super::ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser);
+
+	DamageProc(Damage);
+}
+
+void APlayerRobot::DamageProc(float Damage)
+{
+	if (RobotState == ERobotState::Dead)
+	{
+		return;
+	}
+
+	CurrentHP -= Damage;
+
+	float HPRate = CurrentHP / MaxHP;
+
+	//UI HP Bar 갱신
+
+
+	//UI HP Bar 갱신
+
+
+
+	//죽은경우
+	if (CurrentHP < 0)
+	{
+		//Fade Out 실행
+
+		//Fade Out 실행
+	}
+
+}
+
 void APlayerRobot::AddEnemy(Enemy * pNewEnemey)
 {
 	if (nullptr != pNewEnemey)
@@ -425,7 +461,8 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			GetWorld()->SpawnActor<APlayerBullet>(Bullet_Template, ShotLocation, ShotRotator);
 
 			//TESTTEST
-			RightBasicAim->PlayAnimation();
+			if (nullptr != RightBasicAim)
+				RightBasicAim->PlayAnimation();
 			//TESTTEST
 
 		}
@@ -535,7 +572,7 @@ void APlayerRobot::AddSpawnHoming()
 	}
 }
 
-void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& AimSide)
+void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& AimSide,bool IsLeft)
 {
 	//Check할 시작점 끝점 Setting
 	FVector SocketPosition = GetMesh()->GetSocketLocation(SocketName);
@@ -584,7 +621,10 @@ void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& Ai
 		//Aim 생성
 		else
 		{
-			AimSide = GetWorld()->SpawnActor<ANormalAim>(BasicAim_Template, SpawnAimLocation, LookPlayerRotation);
+			if(IsLeft)
+				AimSide = GetWorld()->SpawnActor<ANormalAim>(BasicLeftAim_Template, SpawnAimLocation, LookPlayerRotation);
+			else
+				AimSide = GetWorld()->SpawnActor<ANormalAim>(BasicRightAim_Template, SpawnAimLocation, LookPlayerRotation);
 			
 			AimState = true;
 		}
