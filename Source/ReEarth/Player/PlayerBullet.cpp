@@ -20,11 +20,12 @@ APlayerBullet::APlayerBullet()
 	//Box 설정
 	//---------------------------------------------------------
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	Box->SetupAttachment(RootComponent);
+	RootComponent = Box;
 	Box->SetBoxExtent(FVector(54.0f, 10.0f, 10.0f));
 	Box->SetCollisionProfileName(TEXT("SelfBullet"));
+	Box->OnComponentBeginOverlap.AddDynamic(this, &APlayerBullet::DoActorBeginOverlap);
 	//---------------------------------------------------------
-
+	
 	//Mesh 설정
 	//---------------------------------------------------------
 	Bullet = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bullet"));
@@ -41,6 +42,7 @@ APlayerBullet::APlayerBullet()
 	Movement->MaxSpeed = 8000.0f;
 	Movement->ProjectileGravityScale = 0.01f;
 	//------------------------------------------------------------------------------
+
 }
 
 // Called when the game starts or when spawned
@@ -64,13 +66,21 @@ void APlayerBullet::Tick(float DeltaTime)
 
 }
 
-void APlayerBullet::DoActorBeginOverlap(AActor * OverlappedActor, AActor * OtherActor)
+void APlayerBullet::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
+	class AActor* OtherActor,
+	class UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult)
 {
 	//여기에 들어가야하는 것
 	//Enemy클래스로 형변환해서 성공하면 SpawnEmitterAt location 호출한다.
+
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, GetActorLocation());
 
 	SendDamage(OtherActor);
+
+	Destroy();
 
 }
 

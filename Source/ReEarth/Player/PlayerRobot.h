@@ -91,8 +91,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent * Seat;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UWidgetComponent * HPBar;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UWidgetComponent * MainUI;
 	//----------------------------------------------
 	//Component
 
@@ -113,8 +113,14 @@ public:
 
 	//체력 관련 멤버 변수
 	//---------------------------------------------------
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "HP")
 	float MaxHP = 100;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
 	float CurrentHP = 100;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HP")
+	class UMainUIBase * MainUIUMG;
 	//---------------------------------------------------
 	//체력 관련 멤버 변수
 
@@ -215,7 +221,7 @@ public:
 	
 	//Damage처리 함수
 	//----------------------------------------------------
-	void ReceiveAnyDamage(float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	void DamageProc(float Damage);
 	//----------------------------------------------------
 	//Damage처리 함수

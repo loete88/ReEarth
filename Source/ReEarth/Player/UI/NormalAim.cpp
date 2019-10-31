@@ -12,7 +12,7 @@ ANormalAim::ANormalAim()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
-	Scene->SetupAttachment(RootComponent);
+	RootComponent = Scene;
 
 	Aim = CreateDefaultSubobject<UWidgetComponent>(TEXT("Aim"));
 	Aim->SetupAttachment(Scene);

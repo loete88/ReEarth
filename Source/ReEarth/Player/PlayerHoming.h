@@ -36,6 +36,18 @@ public:
 	//-------------------------------------------------------
 
 
+	//로켓 추진 효과로 사용할 Particle
+	UPROPERTY(EditAnywhere, Category = "Particle")
+	class UParticleSystem * RocketPropel;
+
+	//로켓 Trail 효과로 사용할 Particle
+	UPROPERTY(EditAnywhere, Category = "Particle")
+	class UParticleSystem * TrailEffect;
+
+	//로켓 Trail Sound로 사용할 SoundCue 
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundBase * TrailSound;
+
 
 	//Target
 	//-------------------------------------------------------
@@ -47,6 +59,21 @@ public:
 	//-------------------------------------------------------
 	//APlayerRobot HomingShot함수에서 Homing준비가 되면 호출해준다.
 	void Shot(AActor * Target);
+	//-------------------------------------------------------
+
+private:
+	AActor * TargetEnemy;
+	
+	//Homing On함수
+	//-------------------------------------------------------
+	//TargetEnemy를 목표를 날아가도록 설정한다.
+	void HomingOn();
+	//-------------------------------------------------------
+
+	//Homing Trail함수
+	//-------------------------------------------------------
+	//미사일이 날아가는 동안 Trail을 생성한다.
+	void HomingTrail();
 	//-------------------------------------------------------
 
 };

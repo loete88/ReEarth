@@ -5,6 +5,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 // Sets default values
 APlayerHoming::APlayerHoming()
@@ -15,7 +18,7 @@ APlayerHoming::APlayerHoming()
 	//BoxComponent 생성 및 설정
 	//--------------------------------------------------------
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	Box->SetupAttachment(RootComponent);
+	RootComponent = Box;
 	Box->SetBoxExtent(FVector(76.0f, 26.0f, 21.0f));
 	Box->SetCollisionProfileName(TEXT("SelfBullet"));
 	//--------------------------------------------------------
@@ -58,5 +61,39 @@ void APlayerHoming::Tick(float DeltaTime)
 
 void APlayerHoming::Shot(AActor * Target)
 {
+	TargetEnemy = Target;
+	
+	//Shot함수 호출시
+	//등뒤에 꽂혀있던 방향대로 앞으로 천천히 간다.
+	ProjectileMovement->MaxSpeed = 3000.0f;
+	
+	ProjectileMovement->Velocity = UKismetMathLibrary::GetForwardVector(Homing->K2_GetComponentRotation()) * 400;
+
+	//Homing On 함수 호출
+	HomingOn();
+}
+
+void APlayerHoming::HomingOn()
+{
+	//EnemyTarget을 목표로 설정
+	//ProjectileMovement->HomingTargetComponent = 
+
+
+	FTransform ParticleTransform = UKismetMathLibrary::MakeTransform(FVector(),
+		FRotator(),
+		FVector(3.0f));
+
+	//Rocket 추진 Effect Spawn
+	UGameplayStatics::SpawnEmitterAttached(RocketPropel, Homing, TEXT("HomingEnd"),
+		FVector(),FRotator(),FVector(3.0f));
+
+	//Trail은 조금 추진하고 조금있다 생성
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerHoming::HomingTrail, 1.0f, false);
+}
+
+void APlayerHoming::HomingTrail()
+{
+
 }
 

@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -21,6 +22,7 @@
 #include "TimerManager.h"
 #include "Player/UI/Aim/NormalAimWidgetBase.h"
 #include "Player/UI/NormalAim.h"
+#include "Player/UI/MainUI/MainUIBase.h"
 
 #define df_FIRE_DURATION 0.12f
 
@@ -85,6 +87,13 @@ APlayerRobot::APlayerRobot()
 	Seat->SetupAttachment(GetMesh(), TEXT("seatposition"));
 	//---------------------------------------------------------------------------
 
+
+	//Widget(체력, 미사일 수 등 UI) 생성
+	//---------------------------------------------------------------------------
+	MainUI = CreateDefaultSubobject<UWidgetComponent>(TEXT("MainUI"));
+
+	MainUI->SetupAttachment(Seat,TEXT("MainUIPosition"));
+	//---------------------------------------------------------------------------
 }
 
 // Called when the game starts or when spawned
@@ -101,7 +110,11 @@ void APlayerRobot::BeginPlay()
 	RightAttackState = EHandState::Off;
 	//-------------------------------------
 
-	
+
+	//MainUI 설정
+	//-------------------------------------
+	MainUIUMG = Cast<UMainUIBase>(MainUI->GetUserWidgetObject());
+	//-------------------------------------
 
 
 	//Controller 생성하기
@@ -345,11 +358,13 @@ void APlayerRobot::LockOff()
 
 }
 
-void APlayerRobot::ReceiveAnyDamage(float Damage, const UDamageType * DamageType, AController * InstigatedBy, AActor * DamageCauser)
+float APlayerRobot::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	Super::ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser);
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	DamageProc(Damage);
+	DamageProc(DamageAmount);
+
+	return DamageAmount;
 }
 
 void APlayerRobot::DamageProc(float Damage)
@@ -364,7 +379,7 @@ void APlayerRobot::DamageProc(float Damage)
 	float HPRate = CurrentHP / MaxHP;
 
 	//UI HP Bar 갱신
-
+	MainUIUMG->SetHPBar(HPRate);
 
 	//UI HP Bar 갱신
 
