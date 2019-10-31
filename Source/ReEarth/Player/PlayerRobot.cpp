@@ -111,12 +111,6 @@ void APlayerRobot::BeginPlay()
 	//-------------------------------------
 
 
-	//MainUI 설정
-	//-------------------------------------
-	MainUIUMG = Cast<UMainUIBase>(MainUI->GetUserWidgetObject());
-	//-------------------------------------
-
-
 	//Controller 생성하기
 	//------------------------------------------
 	LeftController = GetWorld()->SpawnActor<ARemoteController>(LeftController_Template, FTransform());

@@ -91,7 +91,9 @@ void APlayerPawn::BeginPlay()
 	
 	//--------------------------------------------------------------------------------
 	//시작시 Robot 생성해서 가지고 있고 PlayerPosition에 Attach시킨다.
+
 	pRobot = GetWorld()->SpawnActor<APlayerRobot>(Robot_Template, GetActorTransform());
+
 
 	AttachToComponent(pRobot->GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
@@ -115,7 +117,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerPawn::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("MoveFront"), this, &APlayerPawn::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &APlayerPawn::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("ViewYaw"), this, &APlayerPawn::ViewYaw);
 

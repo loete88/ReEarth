@@ -6,13 +6,16 @@
 
 void UMainUIBase::NativeConstruct()
 {
-	RobotHPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HPBar")));
-	
+	Super::NativeConstruct();
+
+	RobotHPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("Bar")));
+
+
 	//초기에는 꽉 차있는 상태
 	SetHPBar();
 }
 
 void UMainUIBase::SetHPBar(float CurrentHP_Rate)
 {
-	RobotHPBar->Percent = CurrentHP_Rate;
+	RobotHPBar->SetPercent(CurrentHP_Rate);
 }
