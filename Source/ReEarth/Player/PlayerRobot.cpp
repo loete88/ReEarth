@@ -128,6 +128,9 @@ void APlayerRobot::BeginPlay()
 
 
 	InitSpawnHoming();
+
+	UE_LOG(LogClass, Warning, TEXT("Beginplay"));
+
 }
 
 // Called every frame

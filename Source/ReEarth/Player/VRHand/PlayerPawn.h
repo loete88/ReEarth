@@ -67,7 +67,7 @@ public:
 
 	//Robot
 	//------------------------------------------
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)
 	class APlayerRobot * pRobot;
 
 	UPROPERTY(EditAnywhere, Category = "Robot")
@@ -136,13 +136,13 @@ public:
 
 
 
-
 	//GetActornearHand함수
 	//----------------------------------------------------
 	//가장 가까이 있고 집는 것이 가능한 Actor를 반환해준다.
 	UFUNCTION()
 	class ACanDropActor * GetActorNearHand(bool bIsLeft);
 	//----------------------------------------------------
+
 
 private:
 	//각 손에 들고있는 Actor의 종류
@@ -151,6 +151,7 @@ private:
 	class ACanDropActor * pRightDropActor;
 	//----------------------------------------------------
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 
 };

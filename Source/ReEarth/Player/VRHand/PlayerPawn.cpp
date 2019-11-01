@@ -18,6 +18,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Player/RemoteController/RemoteController.h"
+#include "Game/ReEarth_PC.h"
+#include "UnrealNetwork.h"
+#include "GenericPlatform/GenericPlatformMisc.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -92,15 +95,25 @@ void APlayerPawn::BeginPlay()
 	//--------------------------------------------------------------------------------
 	//시작시 Robot 생성해서 가지고 있고 PlayerPosition에 Attach시킨다.
 
+	
 	pRobot = GetWorld()->SpawnActor<APlayerRobot>(Robot_Template, GetActorTransform());
+	if (nullptr == pRobot)
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("SpawnFail")));
+		return;
+	}
 
+	else
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Spawn")));
 
-	AttachToComponent(pRobot->GetMesh(),
-		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
-			EAttachmentRule::KeepWorld,
-			EAttachmentRule::KeepWorld,
-			false),
-		TEXT("PlayerPosition"));
+		AttachToComponent(pRobot->GetMesh(),
+			FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+				EAttachmentRule::KeepWorld,
+				EAttachmentRule::KeepWorld,
+				false),
+			TEXT("PlayerPosition"));
+	}
 	//--------------------------------------------------------------------------------
 	
 }
@@ -109,7 +122,6 @@ void APlayerPawn::BeginPlay()
 void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -149,6 +161,11 @@ void APlayerPawn::MoveForward(float Value)
 {
 	if (Value != 0)
 	{
+		if (nullptr == pRobot)
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("TEST")));
+			return;
+		}
 		pRobot->MoveForward(Value);
 	}
 }
@@ -284,6 +301,11 @@ void APlayerPawn::VRReset()
 
 void APlayerPawn::LockOff()
 {
+	if (nullptr == pRobot)
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("LockOffFail")));
+		return;
+	}
 	pRobot->LockOff();
 }
 
@@ -342,5 +364,12 @@ ACanDropActor* APlayerPawn::GetActorNearHand(bool bIsLeft)
 	}
 
 	return (ACanDropActor*)pNearestActor;
+}
+
+void APlayerPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APlayerPawn, pRobot);
 }
 

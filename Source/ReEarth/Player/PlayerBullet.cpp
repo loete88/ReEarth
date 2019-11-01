@@ -81,7 +81,6 @@ void APlayerBullet::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedCom
 	SendDamage(OtherActor);
 
 	Destroy();
-
 }
 
 void APlayerBullet::SendDamage(AActor * OtherActor)
