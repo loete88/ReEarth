@@ -30,7 +30,7 @@ public:
 	   
 	//------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	class APlayerRobot* AttackTarget;
+	class APlayerPawn* AttackTarget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USceneComponent * HomingPosition;

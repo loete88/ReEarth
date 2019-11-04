@@ -3,7 +3,7 @@
 
 #include "EnemyBase.h"
 #include "GameFramework/PlayerController.h"
-#include "Player/PlayerRobot.h"
+#include "Player/VRHand/PlayerPawn.h"
 #include "Components/SceneComponent.h"
 #include "Enemy/Destination.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,11 +27,10 @@ AEnemyBase::AEnemyBase()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AttackTarget = Cast<APlayerRobot>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	AttackTarget = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (AttackTarget)
 	{
-		AttackTarget->AddEnemy(this);
+		//AttackTarget->pRobot->AddEnemy(this);
 	}
 }
 
