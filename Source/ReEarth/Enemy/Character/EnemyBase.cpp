@@ -4,6 +4,7 @@
 #include "EnemyBase.h"
 #include "GameFramework/PlayerController.h"
 #include "Player/VRHand/PlayerPawn.h"
+#include "Player/PlayerRobot.h"
 #include "Components/SceneComponent.h"
 #include "Enemy/Destination.h"
 #include "Kismet/GameplayStatics.h"

@@ -152,7 +152,7 @@ public:
 	//---------------------------------------------------
 	UPROPERTY(EditAnywhere,Category="Controller")
 	TSubclassOf<class ARemoteController> LeftController_Template;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Controller")
 	TSubclassOf<class ARemoteController> RightController_Template;
 	//---------------------------------------------------
