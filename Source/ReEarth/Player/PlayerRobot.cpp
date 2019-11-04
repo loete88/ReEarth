@@ -3,6 +3,7 @@
 
 #include "PlayerRobot.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -59,7 +60,7 @@ APlayerRobot::APlayerRobot()
 	//---------------------------------------------------------------------------
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 
-	SpringArm->SetupAttachment(GetMesh(), TEXT("seatposition"));
+	SpringArm->SetupAttachment(GetMesh(), TEXT("PlayerPosition"));
 	SpringArm->TargetArmLength = 0.0f;
 	SpringArm->SetRelativeLocation(FVector(0, 3, 40));
 	SpringArm->SetRelativeRotation(FRotator(0, 90.0f, 0));
@@ -87,6 +88,23 @@ APlayerRobot::APlayerRobot()
 	Seat->SetupAttachment(GetMesh(), TEXT("seatposition"));
 	//---------------------------------------------------------------------------
 
+	//LeftHand 생성
+	//---------------------------------------------------------------------------
+	LeftHandCollision = CreateDefaultSubobject<USphereComponent>(TEXT("LeftHandCollision"));
+	LeftHandCollision->SetCollisionProfileName(TEXT("Player"));
+	LeftHandCollision->SetupAttachment(GetMesh(), TEXT("hand_l"));
+	LeftHandCollision->SetRelativeLocation(FVector(8.0f, 16.0f, 0.0f));
+	LeftHandCollision->SetSphereRadius(45.0f);
+	//---------------------------------------------------------------------------
+
+	//RightHand 생성
+	//---------------------------------------------------------------------------
+	RightHandCollision = CreateDefaultSubobject<USphereComponent>(TEXT("RightHandCollision"));
+	RightHandCollision->SetCollisionProfileName(TEXT("Player"));
+	RightHandCollision->SetupAttachment(GetMesh(), TEXT("hand_r"));
+	RightHandCollision->SetRelativeLocation(FVector(-8.0f, -16.0f, 0.0f));
+	RightHandCollision->SetSphereRadius(45.0f);
+	//---------------------------------------------------------------------------
 
 	//Widget(체력, 미사일 수 등 UI) 생성
 	//---------------------------------------------------------------------------
@@ -298,27 +316,27 @@ void APlayerRobot::HomingShot()
 	{
 		////2. HomingAim 생성
 		//	//2-1 HomingPosition 가져오기(미사일 맞을 위치)
-		//USceneComponent * HomingPosition = TargetArray[iCnt]->HomingPosition;
-		//FVector ActorHitPosition = HomingPosition->GetComponentLocation();
+		USceneComponent * HomingPosition = TargetArray[iCnt]->HomingPosition;
+		FVector ActorHitPosition = HomingPosition->GetComponentLocation();
 		//
 		//	//2-2 Aim이 Player를 바라보는 Rotator 가져오기
-		//FRotator LookPlayerRotation = UKismetMathLibrary::FindLookAtRotation(ActorHitPosition, GetActorLocation());
+		FRotator LookPlayerRotation = UKismetMathLibrary::FindLookAtRotation(ActorHitPosition, GetActorLocation());
 		//
 		//	//2-3 Aim을 Transform 생성
 		////위치는 HomingPosition + Aim이 Player를 바라보는 Forward Vector
-		//FVector AimLocation = ActorHitPosition + UKismetMathLibrary::GetForwardVector(LookPlayerRotation) * 300;
+		FVector AimLocation = ActorHitPosition + UKismetMathLibrary::GetForwardVector(LookPlayerRotation) * 300;
 		////각도는 Aim이 Player를 바라보도록 그냥 LookPlayerRotation
-		//FTransform AimTransform = UKismetMathLibrary::MakeTransform(AimLocation, LookPlayerRotation,FVector(1.0f,1.0f,1.0f));
+		FTransform AimTransform = UKismetMathLibrary::MakeTransform(AimLocation, LookPlayerRotation,FVector(1.0f,1.0f,1.0f));
 
 		//	//2-4 HomingAim Spawn
-		//AActor * pNewHomingAim = GetWorld()->SpawnActor<AActor>(HomingAim_Template, AimTransform);
+		AActor * pNewHomingAim = GetWorld()->SpawnActor<AActor>(HomingAim_Template, AimTransform);
 
 		////3. HomingAimArray에 넣고 나중에 한번에 소멸시킨다.
-		//HomingAimArray.Add(pNewHomingAim);
+		HomingAimArray.Add(pNewHomingAim);
 
 
 		////4. 미사일 Detach
-		//HomingArray[0]->GetRootComponent()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+		HomingArray[0]->GetRootComponent()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 
 		//5. Play Sound
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReadyHomingSound, GetActorLocation());
@@ -372,6 +390,7 @@ void APlayerRobot::DamageProc(float Damage)
 {
 	if (RobotState == ERobotState::Dead)
 	{
+		
 		return;
 	}
 
@@ -396,7 +415,7 @@ void APlayerRobot::DamageProc(float Damage)
 
 }
 
-void APlayerRobot::AddEnemy(Enemy * pNewEnemey)
+void APlayerRobot::AddEnemy(AEnemyBase * pNewEnemey)
 {
 	if (nullptr != pNewEnemey)
 	{
@@ -404,7 +423,7 @@ void APlayerRobot::AddEnemy(Enemy * pNewEnemey)
 	}
 }
 
-void APlayerRobot::RemoveEnemy(Enemy * pRemoveEnemy)
+void APlayerRobot::RemoveEnemy(AEnemyBase * pRemoveEnemy)
 {
 	if (nullptr != pRemoveEnemy)
 	{
@@ -452,11 +471,9 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ShotLocation);
 
 	
-
-			//TESTTEST
+			//존재 할 때만 Aim animation play
 			if(nullptr != LeftBasicAim)
 				LeftBasicAim->PlayAnimation();
-			//TESTTEST
 
 		}
 		

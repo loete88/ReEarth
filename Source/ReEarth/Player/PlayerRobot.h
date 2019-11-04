@@ -6,10 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PlayerBullet.h"
 #include "Player/PlayerHoming.h"
+#include "Enemy/Character/EnemyBase.h"
 #include "PlayerRobot.generated.h"
-
-
-#define Enemy AActor
 
 
 //Robot 상태에 대한 Enum값
@@ -90,6 +88,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent * Seat;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USphereComponent * LeftHandCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USphereComponent * RightHandCollision;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UWidgetComponent * MainUI;
@@ -228,8 +232,8 @@ public:
 
 	//EnemyArray에 추가,삭제하는 함수
 	//---------------------------------------------
-	void AddEnemy(Enemy * pNewEnemey);
-	void RemoveEnemy(Enemy * pRemoveEnemy);
+	void AddEnemy(AEnemyBase * pNewEnemey);
+	void RemoveEnemy(AEnemyBase * pRemoveEnemy);
 	//---------------------------------------------
 
 
@@ -253,10 +257,10 @@ private:
 	TArray<class APlayerHoming*> HomingArray;
 
 	//Target으로 가능한 Enemy Array
-	TArray<Enemy*>	EnemyArray;
+	TArray<AEnemyBase*>	EnemyArray;
 
 	//Target으로할 Enemy Array
-	TArray<Enemy*>	TargetArray;
+	TArray<AEnemyBase*>	TargetArray;
 
 	//현재 미사일 개수
 	int				CurrentHomingNum = 4;

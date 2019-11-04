@@ -14,4 +14,13 @@ class REEARTH_API UHomingAimWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UWidgetAnimation * ShotAnimation;
+
+	virtual void NativeConstruct() override;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void PlayWidgetAnimataion();
+	void PlayWidgetAnimataion_Implementation();
 };
