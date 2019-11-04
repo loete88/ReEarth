@@ -28,10 +28,18 @@ AEnemyBase::AEnemyBase()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyBase::AddEnemy, 1.0f);
+}
+
+void AEnemyBase::AddEnemy()
+{
+	UE_LOG(LogTemp, Log, TEXT("=================================AddEnemy"));
 	AttackTarget = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (AttackTarget)
 	{
-		//AttackTarget->pRobot->AddEnemy(this);
+		AttackTarget->pRobot->AddEnemy(this);
 	}
 }
 

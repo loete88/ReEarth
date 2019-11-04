@@ -19,16 +19,12 @@ public:
 	virtual void OnPossess(APawn* InPawn) override;
 
 	static const FName IsAttackEndKey;
-	static const FName IsMoveAttackTargetEndKey;
 	static const FName IsMovePatrolLocEndKey;
 	static const FName IsDestinationActorEndKey;
 	static const FName IsVisibleAttackTargetKey;
 
 	UFUNCTION(BlueprintCallable)
 	void IsAttackEnd(bool Value);
-
-	UFUNCTION(BlueprintCallable)
-	void IsMoveAttackTargetEnd(bool Value);
 
 	UFUNCTION(BlueprintCallable)
 	void IsMovePatrolLocEnd(bool Value);

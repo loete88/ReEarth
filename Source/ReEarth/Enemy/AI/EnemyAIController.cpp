@@ -8,7 +8,6 @@
 #include "UObject/ConstructorHelpers.h"
 
 const FName AEnemyAIController::IsAttackEndKey(TEXT("IsAttackEnd"));
-const FName AEnemyAIController::IsMoveAttackTargetEndKey(TEXT("IsMoveAttackTargetEnd"));
 const FName AEnemyAIController::IsMovePatrolLocEndKey(TEXT("IsMovePatrolLocEnd"));
 const FName AEnemyAIController::IsDestinationActorEndKey(TEXT("IsDestinationActorEnd"));
 const FName AEnemyAIController::IsVisibleAttackTargetKey(TEXT("IsVisibleAttackTarget"));
@@ -50,11 +49,6 @@ void AEnemyAIController::OnPossess(APawn * InPawn)
 void AEnemyAIController::IsAttackEnd(bool Value)
 {
 	Blackboard->SetValueAsBool(IsAttackEndKey, Value);
-}
-
-void AEnemyAIController::IsMoveAttackTargetEnd(bool Value)
-{
-	Blackboard->SetValueAsBool(IsMoveAttackTargetEndKey, Value);
 }
 
 void AEnemyAIController::IsMovePatrolLocEnd(bool Value)

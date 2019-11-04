@@ -25,6 +25,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void AddEnemy();
 
 public:
 	   
@@ -93,5 +94,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void RotateAttactTargetLoc();
 	virtual void RotateAttactTargetLoc_Implementation();
+
 
 };
