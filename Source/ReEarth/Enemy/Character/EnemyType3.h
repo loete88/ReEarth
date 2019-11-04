@@ -15,6 +15,7 @@ class REEARTH_API AEnemyType3 : public AEnemyBase
 	GENERATED_BODY()
 
 public:
+	AEnemyType3();
 
 	virtual bool GetVisibleAttackTarget() override;
 	

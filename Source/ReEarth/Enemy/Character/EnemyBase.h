@@ -61,6 +61,9 @@ public:
 	
 	//------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool EnableMove = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsVisibleAttackTarget = false;
 
 	UFUNCTION(BlueprintCallable)
