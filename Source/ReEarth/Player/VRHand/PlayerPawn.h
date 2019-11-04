@@ -92,7 +92,11 @@ public:
 
 	//이동관련 함수--------------------------------------
 	//앞,뒤로 이동
+	//UFUNCTION(Server, Reliable, WithValidation)
 	void MoveForward(float Value);
+	//bool MoveForward_Validate(float Value);
+	//void MoveForward_Implementation(float Value);
+
 
 	//좌,우로 이동
 	void MoveRight(float Value);
@@ -142,6 +146,7 @@ public:
 	UFUNCTION()
 	class ACanDropActor * GetActorNearHand(bool bIsLeft);
 	//----------------------------------------------------
+
 
 
 private:

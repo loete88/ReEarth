@@ -48,6 +48,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	class USoundBase * TrailSound;
 
+	//Homing On Sound로 사용할 SoundCue
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundBase * HomingOnSound;
+
+	//Homing Hit로 사용할 SoundCue
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundBase * HomingHitSound;
 
 	//Target
 	//-------------------------------------------------------

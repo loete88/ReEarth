@@ -69,12 +69,18 @@ void APlayerHoming::Shot(AActor * Target)
 	
 	ProjectileMovement->Velocity = UKismetMathLibrary::GetForwardVector(Homing->K2_GetComponentRotation()) * 400;
 
+
+	//Aim Animation 재생
+
+
 	//Homing On 함수 호출
 	HomingOn();
 }
 
 void APlayerHoming::HomingOn()
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), HomingOnSound, GetActorLocation());
+
 	//EnemyTarget을 목표로 설정
 	//ProjectileMovement->HomingTargetComponent = 
 
@@ -94,6 +100,11 @@ void APlayerHoming::HomingOn()
 
 void APlayerHoming::HomingTrail()
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), TrailSound, GetActorLocation());
 
+	UGameplayStatics::SpawnEmitterAttached(TrailEffect, Homing, TEXT("HomingEnd"),
+		FVector(),FRotator(),FVector(2.0f));
+
+	ProjectileMovement->HomingAccelerationMagnitude = 5000.0f;
 }
 

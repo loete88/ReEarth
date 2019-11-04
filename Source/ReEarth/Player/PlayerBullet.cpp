@@ -7,6 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 
@@ -76,7 +77,7 @@ void APlayerBullet::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedCom
 	//여기에 들어가야하는 것
 	//Enemy클래스로 형변환해서 성공하면 SpawnEmitterAt location 호출한다.
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, GetActorLocation());
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, UKismetMathLibrary::MakeTransform(GetActorLocation(), FRotator(), FVector(4.0f)));
 
 	SendDamage(OtherActor);
 

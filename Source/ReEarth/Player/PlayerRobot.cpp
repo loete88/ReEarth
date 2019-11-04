@@ -164,6 +164,9 @@ void APlayerRobot::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+
+
+
 void APlayerRobot::MoveForward(float Value)
 {
 	if (Value != 0)
@@ -171,10 +174,11 @@ void APlayerRobot::MoveForward(float Value)
 		//RobotState가 Normal상태 일 때만 움직이도록 만들자
 		if (RobotState == ERobotState::Normal)
 		{
-			AddMovementInput(UKismetMathLibrary::GetForwardVector(FRotator(0, GetControlRotation().Yaw, 0)),Value);
+			AddMovementInput(UKismetMathLibrary::GetForwardVector(FRotator(0, GetControlRotation().Yaw, 0)), Value);
 		}
 	}
 }
+
 
 void APlayerRobot::MoveRight(float Value)
 {
@@ -579,8 +583,6 @@ void APlayerRobot::AddSpawnHoming()
 		
 
 		HomingArray.Add(pNewHoming);
-
-
 	}
 }
 

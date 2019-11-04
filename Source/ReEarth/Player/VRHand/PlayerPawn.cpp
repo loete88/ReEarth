@@ -50,12 +50,12 @@ APlayerPawn::APlayerPawn()
 	LeftHandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LeftHandMesh"));
 	LeftHandMesh->SetupAttachment(LeftMotionController);
 	LeftHandMesh->SetRelativeLocationAndRotation(FVector(-13.0f, 0.0f, -2.0f),
-		FRotator(0.0f, 0.0f, 90.0f));
+	FRotator(0.0f, 0.0f, 90.0f));
 
 	RightHandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("RightHandMesh"));
 	RightHandMesh->SetupAttachment(RightMotionController);
 	RightHandMesh->SetRelativeLocationAndRotation(FVector(-13.0f, 0.0f, -2.0f),
-		FRotator(0.0f, 0.0f, 90.0f));
+	FRotator(0.0f, 0.0f, 90.0f));
 	//------------------------------------------------------------
 
 
@@ -95,25 +95,17 @@ void APlayerPawn::BeginPlay()
 	//--------------------------------------------------------------------------------
 	//시작시 Robot 생성해서 가지고 있고 PlayerPosition에 Attach시킨다.
 
-	
+	//본인 것만 생성------------
 	pRobot = GetWorld()->SpawnActor<APlayerRobot>(Robot_Template, GetActorTransform());
-	if (nullptr == pRobot)
-	{
-		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("SpawnFail")));
-		return;
-	}
 
-	else
-	{
-		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Spawn")));
+	AttachToComponent(pRobot->GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepWorld,
+			EAttachmentRule::KeepWorld,
+			false),
+		TEXT("PlayerPosition"));
+	//--------------------------
 
-		AttachToComponent(pRobot->GetMesh(),
-			FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
-				EAttachmentRule::KeepWorld,
-				EAttachmentRule::KeepWorld,
-				false),
-			TEXT("PlayerPosition"));
-	}
 	//--------------------------------------------------------------------------------
 	
 }
@@ -161,11 +153,6 @@ void APlayerPawn::MoveForward(float Value)
 {
 	if (Value != 0)
 	{
-		if (nullptr == pRobot)
-		{
-			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("TEST")));
-			return;
-		}
 		pRobot->MoveForward(Value);
 	}
 }
