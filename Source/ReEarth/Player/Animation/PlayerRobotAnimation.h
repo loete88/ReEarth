@@ -34,7 +34,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float			RightAimPitch;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool			IsJumping;
 	

@@ -278,7 +278,7 @@ void APlayerPawn::Release(bool IsLeft)
 
 void APlayerPawn::HomingShot()
 {
-
+	pRobot->HomingShot();
 }
 
 void APlayerPawn::VRReset()
@@ -288,11 +288,6 @@ void APlayerPawn::VRReset()
 
 void APlayerPawn::LockOff()
 {
-	if (nullptr == pRobot)
-	{
-		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("LockOffFail")));
-		return;
-	}
 	pRobot->LockOff();
 }
 
