@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "EnemyBase.generated.h"
 
+//------------------------------------------------------------------------------------
 UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
@@ -15,28 +16,29 @@ enum class EEnemyState : uint8
 	Dead = 3		UMETA(DisplayName = "Dead")
 };
 
+//------------------------------------------------------------------------------------
 UCLASS()
 class REEARTH_API AEnemyBase : public ACharacter
 {
 	GENERATED_BODY()
 			   
 public:
+
 	AEnemyBase();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
+
 	virtual void BeginPlay() override;
 	void AddEnemy();
 
 public:
 	   
-	//------------------------------------------
+	//------------------------------------------------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class APlayerPawn* AttackTarget;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class USceneComponent * HomingPosition;
-	
-	//------------------------------------------
+	   	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EEnemyState State;
 
@@ -46,10 +48,19 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float CurrentHP = 100;
 	
-	//------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsDead = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool EnableMove = true;
 	   
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsVisibleAttackTarget = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USceneComponent * HomingPosition;
+
+	//------------------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(EEnemyState NewState);
 
@@ -58,18 +69,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	AActor* GetDestinationTarget();
-	
-	//------------------------------------------
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool EnableMove = true;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool IsVisibleAttackTarget = false;
 
 	UFUNCTION(BlueprintCallable)
 	virtual bool GetVisibleAttackTarget();
 
-	//------------------------------------------
+	//------------------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void AttackStart();
 	virtual void AttackStart_Implementation();
@@ -78,25 +82,25 @@ public:
 	void AttackEnd();
 	virtual void AttackEnd_Implementation();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void DeadEnd();
-	virtual void DeadEnd_Implementation();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void DeadEnd();
+	//virtual void DeadEnd_Implementation();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void MovePatrolLoc();
-	virtual void MovePatrolLoc_Implementation();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void MovePatrolLoc();
+	//virtual void MovePatrolLoc_Implementation();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void MoveAttackTarget();
-	virtual void MoveAttackTarget_Implementation();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void MoveAttackTarget();
+	//virtual void MoveAttackTarget_Implementation();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void MoveDestinationTarget(AActor* Target);
-	virtual void MoveDestinationTarget_Implementation(AActor* Target);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void MoveDestinationTarget(AActor* Target);
+	//virtual void MoveDestinationTarget_Implementation(AActor* Target);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void RotateAttactTargetLoc();
 	virtual void RotateAttactTargetLoc_Implementation();
-
-
+	
+	//------------------------------------------------------------------------------------
 };

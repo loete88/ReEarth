@@ -9,13 +9,11 @@
 #include "Enemy/Destination.h"
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/AI/EnemyAIController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
+//------------------------------------------------------------------------------------
 AEnemyBase::AEnemyBase()
 {
-	UE_LOG(LogTemp, Log, TEXT("================================="));
-	UE_LOG(LogTemp, Log, TEXT("AEnemyBase"));
-	UE_LOG(LogTemp, Log, TEXT("================================="));
-
 	PrimaryActorTick.bCanEverTick = true;
 
 	HomingPosition = CreateDefaultSubobject<USceneComponent>(TEXT("HomingPosition"));
@@ -23,8 +21,60 @@ AEnemyBase::AEnemyBase()
 
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
+void AEnemyBase::Tick(float DeltaTime)
+{	
+	if (AttackTarget)
+	{
+		FHitResult OutHit;
+		
+		FVector Start = GetActorLocation();
+		FVector TmpEnd = AttackTarget->GetActorLocation();
+		FVector End = FVector(TmpEnd.X, TmpEnd.Y, TmpEnd.Z - 300);
+			
+		TEnumAsByte<ETraceTypeQuery> ObstacleTraceType;
+
+		TArray<AActor*> IgnoreActors;
+		IgnoreActors.Add(this);
+			
+		bool IsResult = UKismetSystemLibrary::LineTraceSingle(
+			GetWorld(),
+			Start,
+			End,
+			ObstacleTraceType,
+			false,
+			IgnoreActors,
+			EDrawDebugTrace::ForOneFrame,
+			OutHit,
+			true);
+
+		if (OutHit.GetActor())
+		{
+			if (Cast<APlayerRobot>(OutHit.GetActor()))
+			{
+				IsVisibleAttackTarget = true;
+			}
+			else if (Cast<APlayerPawn>(OutHit.GetActor()))
+			{
+				IsVisibleAttackTarget = true;
+			}
+			else
+			{
+				IsVisibleAttackTarget = false;
+			}
+		}
+		else
+		{
+			IsVisibleAttackTarget = false;
+		}
+	}
+}
+
+//------------------------------------------------------------------------------------
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,16 +83,22 @@ void AEnemyBase::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyBase::AddEnemy, 1.0f);
 }
 
+
 void AEnemyBase::AddEnemy()
 {
-	UE_LOG(LogTemp, Log, TEXT("=================================AddEnemy"));
 	AttackTarget = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (AttackTarget)
 	{
+		UE_LOG(LogTemp, Log, TEXT("EnemyBase :: AddEnemy Success"));
 		AttackTarget->pRobot->AddEnemy(this);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("EnemyBase :: AddEnemy Fail"));
 	}
 }
 
+//------------------------------------------------------------------------------------
 void AEnemyBase::ChangeState(EEnemyState NewState)
 {
 	this->State = NewState;
@@ -80,11 +136,10 @@ AActor* AEnemyBase::GetDestinationTarget()
 
 bool AEnemyBase::GetVisibleAttackTarget()
 {
-	bool visible = IsVisibleAttackTarget;
-	IsVisibleAttackTarget = false;
-	return visible;
+	return IsVisibleAttackTarget;
 }
 
+//------------------------------------------------------------------------------------
 void AEnemyBase::AttackStart_Implementation() { }
 
 void AEnemyBase::AttackEnd_Implementation() { }

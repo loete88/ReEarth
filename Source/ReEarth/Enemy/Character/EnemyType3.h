@@ -15,8 +15,22 @@ class REEARTH_API AEnemyType3 : public AEnemyBase
 	GENERATED_BODY()
 
 public:
+
 	AEnemyType3();
 
-	virtual bool GetVisibleAttackTarget() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent* Tower;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class USkeletalMeshComponent* Gun;
 	
+	//------------------------------------------------------------------------------------
+	//void AttackStart_Implementation();
+
+	void AttackEnd_Implementation();
+
+	void RotateAttactTargetLoc_Implementation();
+
+	//------------------------------------------------------------------------------------
+
 };

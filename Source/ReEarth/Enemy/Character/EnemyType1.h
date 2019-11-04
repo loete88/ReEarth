@@ -14,4 +14,25 @@ class REEARTH_API AEnemyType1 : public AEnemyBase
 {
 	GENERATED_BODY()
 	
+public:
+
+	AEnemyType1();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USkeletalMeshComponent* Weapon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool CheckAttackStart = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool CheckAttackEnd = false;
+
+	//------------------------------------------------------------------------------------
+	void AttackStart_Implementation();
+
+	void AttackEnd_Implementation();
+
+	void RotateAttactTargetLoc_Implementation();
+
+	//------------------------------------------------------------------------------------
 };
