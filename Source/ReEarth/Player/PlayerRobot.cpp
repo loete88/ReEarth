@@ -471,11 +471,9 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ShotLocation);
 
 	
-
-			//TESTTEST
+			//존재 할 때만 Aim animation play
 			if(nullptr != LeftBasicAim)
 				LeftBasicAim->PlayAnimation();
-			//TESTTEST
 
 		}
 		

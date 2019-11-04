@@ -8,6 +8,6 @@ void UHomingAimWidgetBase::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-//void UHomingAimWidgetBase::PlayWidgetAnimataion_Implementation()
-//{
-//}
+void UHomingAimWidgetBase::PlayWidgetAnimataion_Implementation()
+{
+}
