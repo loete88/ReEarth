@@ -4,7 +4,6 @@
 #include "AnimNotify_JumpEndSound.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Sockets.h"
 
 bool UAnimNotify_JumpEndSound::Received_Notify(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) const
 {
