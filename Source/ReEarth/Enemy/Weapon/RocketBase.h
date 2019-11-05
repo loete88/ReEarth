@@ -25,6 +25,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UProjectileMovementComponent * Movement;
 
+	UPROPERTY(EditAnywhere, Category = "Particle")
+	class UParticleSystem * CollisionEffect;
+
 	UFUNCTION()
 	void DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
 		class AActor* OtherActor,
@@ -32,5 +35,10 @@ public:
 		int32 OtherBodyIndex,
 		bool bFromSweep,
 		const FHitResult& SweepResult);
+
+	void SendDamage(AActor * OtherActor);
+
+private:
+	const float Damage = 20.0f;
 
 };
