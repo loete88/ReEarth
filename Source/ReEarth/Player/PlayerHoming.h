@@ -64,6 +64,21 @@ public:
 	void Shot(AEnemyBase * Target);
 	//-------------------------------------------------------
 
+
+	//충돌 처리
+	//충돌 파티클 재생하고 상대에게 Damage를 먹인 후 파괴된다. 
+	UFUNCTION()
+	void DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
+		class AActor* OtherActor,
+		class UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+	//-----------------------------------------------------------------------
+
+
+	void SendDamage(AActor * OtherActor);
+
 private:
 	
 	//Homing On함수

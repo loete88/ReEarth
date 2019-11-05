@@ -292,8 +292,6 @@ void APlayerRobot::HomingShot()
 
 		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
 		float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
-
-		UE_LOG(LogClass, Warning, TEXT("%f"), fDistance);
 		
 		//4. 미사일 허용 범위안에 들어오고
 		//현재 카메라에 보이는 상태면 TargetArray에 추가
@@ -327,13 +325,13 @@ void APlayerRobot::HomingShot()
 		//
 		//	//2-3 Aim을 Transform 생성
 		////위치는 HomingPosition + Aim이 Player를 바라보는 Forward Vector
-		FVector AimLocation = ActorHitPosition + UKismetMathLibrary::GetForwardVector(LookPlayerRotation) * 300;
+		FVector AimLocation = ActorHitPosition + UKismetMathLibrary::GetForwardVector(LookPlayerRotation) * 600;
 		////각도는 Aim이 Player를 바라보도록 그냥 LookPlayerRotation
 		FTransform AimTransform = UKismetMathLibrary::MakeTransform(AimLocation, LookPlayerRotation,FVector(1.0f,1.0f,1.0f));
 
-		//	//2-4 HomingAim Spawn
-		AHomingAim * pHomingAim = GetWorld()->SpawnActor<AHomingAim>(HomingAim_Template, AimLocation, LookPlayerRotation);
 
+		//	//2-4 HomingAim Spawn
+		AHomingAim * pHomingAim = GetWorld()->SpawnActor<AHomingAim>(HomingAim_Template, AimTransform);
 		////3. HomingAimArray에 넣고 나중에 한번에 소멸시킨다.
 		HomingAimArray.Add(pHomingAim);
 
@@ -365,7 +363,7 @@ void APlayerRobot::HomingShot()
 
 	//Homing Aim을 보여주기위한 약간의 Delay
 	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerRobot::ClearTargetArray, 1.0f, false);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerRobot::ClearTargetArray, 2.0f, false);
 	//----------------------------------------------------
 	//필요한 & 사용한 변수들 갱신
 }
