@@ -13,15 +13,18 @@
 
 AEnemyType3::AEnemyType3()
 {
+	MaxHP = 200.0f;
+	CurrentHP = MaxHP;
+	
 	EnableMove = false;
 
 	//--------------------------------------------
 	GetCapsuleComponent()->SetCapsuleHalfHeight(500);
-	GetCapsuleComponent()->SetCapsuleRadius(200);
+	GetCapsuleComponent()->SetCapsuleRadius(300);
 
 	//--------------------------------------------
 	Tower = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower"));
-	Tower->SetupAttachment(RootComponent);
+	Tower->SetupAttachment(GetMesh());
 	Tower->SetRelativeLocation(FVector(0, 0, -500));
 	Tower->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 
@@ -46,6 +49,21 @@ AEnemyType3::AEnemyType3()
 }
 
 //------------------------------------------------------------------------------------
+void AEnemyType3::AttackStart_Implementation()
+{
+	if (AttackTarget)
+	{
+		FTransform SocketT = Gun->GetSocketTransform(TEXT("Rocket"));
+		FRotator Rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), AttackTarget->GetActorLocation());
+		Rot.Roll = 0;
+		Rot.Pitch = 0;
+		FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
+		FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
+
+		GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
+	}
+}
+
 void AEnemyType3::AttackEnd_Implementation()
 {
 	AEnemyAIController* AI = Cast<AEnemyAIController>(GetController());

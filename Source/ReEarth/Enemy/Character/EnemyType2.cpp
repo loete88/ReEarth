@@ -12,14 +12,17 @@
 
 AEnemyType2::AEnemyType2()
 {
-	//--------------------------------------------
-	GetCapsuleComponent()->SetCapsuleHalfHeight(200);
-	GetCapsuleComponent()->SetCapsuleRadius(200);
+	MaxHP = 100.0f;
+	CurrentHP = MaxHP;
 
 	//--------------------------------------------
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -200));
+	GetCapsuleComponent()->SetCapsuleHalfHeight(400);
+	GetCapsuleComponent()->SetCapsuleRadius(400);
+
+	//--------------------------------------------
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -400));
 	GetMesh()->SetRelativeRotation(FRotator(0, 0, 0));
-	GetMesh()->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+	GetMesh()->SetWorldScale3D(FVector(1.5f, 1.5f, 1.5f));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MeshAsset(
 		TEXT("/Game/AssetContents/CSC/Meshes/SK_CSC_Base1.SK_CSC_Base1"));
@@ -90,6 +93,36 @@ AEnemyType2::AEnemyType2()
 }
 
 //------------------------------------------------------------------------------------
+void AEnemyType2::AttackStart_Implementation()
+{
+	CheckAttackStart = !CheckAttackStart;
+	if (CheckAttackStart)
+	{
+		{
+			FTransform SocketT = SK_CSC_Gun1->GetSocketTransform(TEXT("Rocket"));
+			FRotator Rot;
+			Rot.Roll = 0;
+			Rot.Pitch = 0;
+			Rot.Yaw = GetActorRotation().Yaw;
+			FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
+			FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
+
+			GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
+		}
+		{
+			FTransform SocketT = SK_CSC_Gun2->GetSocketTransform(TEXT("Rocket"));
+			FRotator Rot;
+			Rot.Roll = 0;
+			Rot.Pitch = 0;
+			Rot.Yaw = GetActorRotation().Yaw;
+			FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
+			FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
+
+			GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
+		}
+	}
+}
+
 void AEnemyType2::AttackEnd_Implementation()
 {
 	CheckAttackEnd = !CheckAttackEnd;

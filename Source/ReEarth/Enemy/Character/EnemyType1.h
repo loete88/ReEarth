@@ -27,6 +27,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool CheckAttackEnd = false;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> Rocket_Template;
+
 	//------------------------------------------------------------------------------------
 	void AttackStart_Implementation();
 

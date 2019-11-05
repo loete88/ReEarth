@@ -9,8 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Components/CapsuleComponent.h"
 
-// Sets default values
 ARocketBase::ARocketBase()
 {
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
@@ -33,8 +33,8 @@ ARocketBase::ARocketBase()
 	}
 	
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
-	Movement->InitialSpeed = 5000.0f;
-	Movement->MaxSpeed = 5000.0f;
+	Movement->InitialSpeed = 3000.0f;
+	Movement->MaxSpeed = 3000.0f;
 	Movement->ProjectileGravityScale = 0.01f;
 }
 
