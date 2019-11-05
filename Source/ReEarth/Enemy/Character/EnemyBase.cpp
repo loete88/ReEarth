@@ -10,14 +10,18 @@
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/AI/EnemyAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 
 //------------------------------------------------------------------------------------
 AEnemyBase::AEnemyBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
+
 	HomingPosition = CreateDefaultSubobject<USceneComponent>(TEXT("HomingPosition"));
-	HomingPosition->SetupAttachment(RootComponent);
+	HomingPosition->SetupAttachment(GetMesh());
 
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;

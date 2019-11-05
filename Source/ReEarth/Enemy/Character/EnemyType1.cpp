@@ -19,7 +19,7 @@ AEnemyType1::AEnemyType1()
 	//--------------------------------------------
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -500));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
-	GetMesh()->SetWorldScale3D(FVector(5.0f, 5.0f, 5.0f));
+	GetMesh()->SetWorldScale3D(FVector(4.0f, 4.0f, 4.0f));
 	   
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MeshAsset(
 		TEXT("/Game/AssetContents/ModularSciFiHeroesHP/Mesh/MeshForInternalAnimations/forIntAnim_UnifiedCharacters/Int_UnifiedCharacter01_SK.Int_UnifiedCharacter01_SK"));
@@ -41,22 +41,21 @@ AEnemyType1::AEnemyType1()
 //------------------------------------------------------------------------------------
 void AEnemyType1::AttackStart_Implementation()
 {
+	MaxHP = 100.0f;
+	CurrentHP = MaxHP;
+
 	CheckAttackStart = !CheckAttackStart;
 	if (CheckAttackStart)
 	{
-		FTransform T = Weapon->GetSocketTransform(TEXT("WeaponSocket"));
-		FVector Loc = T.GetLocation();
-
-		UE_LOG(LogTemp, Log, TEXT("AttackStart_Implementation %f %f %f "), Loc.X, Loc.Y, Loc.Z);
-
-		FRotator Rot = FRotator::ZeroRotator;
+		FTransform SocketT = Weapon->GetSocketTransform(TEXT("WeaponSocket"));
+		FRotator Rot;
+		Rot.Roll = 0;
+		Rot.Pitch = 0;
+		Rot.Yaw = GetActorRotation().Yaw;
+		FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
+		FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
 		
-		//GetWorld()->SpawnActor<ARocketBase>(GetClass(), Loc, Rot);
-
-		//FActorSpawnParameters SpawnParams;
-		//SpawnParams.Owner = this;
-		//SpawnParams.Instigator = Instigator;
-		//GetWorld()->SpawnActor<ARocketBase>(GetClass(), Loc, Rot, SpawnParams);
+		GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
 	}
 }
 
