@@ -41,4 +41,12 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 
+
+private:
+	//SetAimAngle함수
+	//-----------------------------------------------------
+	//해당 손의 WorldRotation값을 가져와서
+	//AimYaw, AimPitch에 값을 넣어준다.
+	//void SetAimAngle(class USkeletalMeshComponent * Hand);
+	//-----------------------------------------------------
 };

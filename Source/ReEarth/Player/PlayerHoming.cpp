@@ -22,7 +22,6 @@ APlayerHoming::APlayerHoming()
 	RootComponent = Box;
 	Box->SetBoxExtent(FVector(76.0f, 26.0f, 21.0f));
 	Box->SetCollisionProfileName(TEXT("SelfBullet"));
-	Box->OnComponentBeginOverlap.AddDynamic(this, &APlayerHoming::DoActorBeginOverlap);
 	//--------------------------------------------------------
 
 
@@ -101,24 +100,3 @@ void APlayerHoming::HomingTrail()
 	ProjectileMovement->HomingAccelerationMagnitude = 5000.0f;
 }
 
-void APlayerHoming::SendDamage(AActor * OtherActor)
-{
-	UGameplayStatics::ApplyDamage(OtherActor, 100.0f, UGameplayStatics::GetPlayerController(GetWorld(), 0), OtherActor, NULL);
-}
-
-void APlayerHoming::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
-	class AActor* OtherActor,
-	class UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex,
-	bool bFromSweep,
-	const FHitResult& SweepResult)
-{
-	//여기에 들어가야하는 것
-	//Enemy클래스로 형변환해서 성공하면 SpawnEmitterAt location 호출한다.
-
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, UKismetMathLibrary::MakeTransform(GetActorLocation(), FRotator(), FVector(4.0f)));
-
-	SendDamage(OtherActor);
-
-	Destroy();
-}

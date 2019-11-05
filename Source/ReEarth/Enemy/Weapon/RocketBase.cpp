@@ -10,6 +10,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/CapsuleComponent.h"
+#include "Player/VRHand/PlayerPawn.h"
+#include "Player/PlayerRobot.h"
 
 ARocketBase::ARocketBase()
 {
@@ -42,6 +44,17 @@ void ARocketBase::DoActorBeginOverlap(UPrimitiveComponent * OverlappedComp,
 	AActor * OtherActor, UPrimitiveComponent * OtherComp, 
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("ARocketBase :: DoActorBeginOverlap"));
+	if ((Cast<APlayerPawn>(OtherActor)) || (Cast<APlayerRobot>(OtherActor)))
+	{
+		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, UKismetMathLibrary::MakeTransform(GetActorLocation(), FRotator(), FVector(1.5f)));
+		//SendDamage(OtherActor);
+	}
+	//SetActorHiddenInGame(false);
+	Destroy();
 }
 
+void ARocketBase::SendDamage(AActor * OtherActor)
+{
+	UGameplayStatics::ApplyDamage(OtherActor, Damage
+		, UGameplayStatics::GetPlayerController(GetWorld(), 0), OtherActor, NULL);
+}

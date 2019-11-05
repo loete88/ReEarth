@@ -11,7 +11,7 @@ bool UAnimNotify_StepSound::Received_Notify(USkeletalMeshComponent * MeshComp, U
 {
 	Super::Received_Notify(MeshComp, Animation);
 
-	FVector SoundLocation = MeshComp->GetComponentLocation();
+	FVector SoundLocation = MeshComp->GetSocketLocation(TEXT("FootSoundPosition"));
 
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, SoundLocation);
 
