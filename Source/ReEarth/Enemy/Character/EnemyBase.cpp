@@ -146,10 +146,10 @@ void AEnemyBase::AttackEnd_Implementation() { }
 
 void AEnemyBase::DeadEnd_Implementation(){ }
 
-void AEnemyBase::MovePatrolLoc_Implementation() { }
+//void AEnemyBase::MovePatrolLoc_Implementation() { }
 
-void AEnemyBase::MoveAttackTarget_Implementation() { }
+//void AEnemyBase::MoveAttackTarget_Implementation() { }
 
-void AEnemyBase::MoveDestinationTarget_Implementation(AActor* Target) { }
+//void AEnemyBase::MoveDestinationTarget_Implementation(AActor* Target) { }
 
 void AEnemyBase::RotateAttactTargetLoc_Implementation() { }

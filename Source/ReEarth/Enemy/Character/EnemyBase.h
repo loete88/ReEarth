@@ -82,9 +82,9 @@ public:
 	void AttackEnd();
 	virtual void AttackEnd_Implementation();
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void DeadEnd();
-	//virtual void DeadEnd_Implementation();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void DeadEnd();
+	virtual void DeadEnd_Implementation();
 
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	//void MovePatrolLoc();
