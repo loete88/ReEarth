@@ -148,7 +148,7 @@ void APlayerRobot::BeginPlay()
 
 	InitSpawnHoming();
 
-	UE_LOG(LogClass, Warning, TEXT("Beginplay"));
+	MainUIUMG = Cast<UMainUIBase>(MainUI->GetUserWidgetObject());
 
 }
 
@@ -350,6 +350,8 @@ void APlayerRobot::HomingShot()
 		//7. 발사한 미사일 HomingArray에서 제거
 		APlayerHoming * pTargetHoming = HomingArray[0];
 		HomingArray.Remove(pTargetHoming);
+
+		MainUIUMG->UpdateRemoveMissile();
 	}
 	//---------------------------------------------------
 	//Homing Setting
@@ -365,7 +367,7 @@ void APlayerRobot::HomingShot()
 
 	//Homing Aim을 보여주기위한 약간의 Delay
 	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerRobot::ClearTargetArray, 1.0f, false);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerRobot::ClearTargetArray, 1.5f, false);
 	//----------------------------------------------------
 	//필요한 & 사용한 변수들 갱신
 }
@@ -602,6 +604,8 @@ void APlayerRobot::AddSpawnHoming()
 		
 
 		HomingArray.Add(pNewHoming);
+
+		MainUIUMG->UpdateAddMissile();
 	}
 }
 
