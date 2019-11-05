@@ -3,6 +3,7 @@
 
 #include "EnemyType3.h"
 #include "Player/VRHand/PlayerPawn.h"
+#include "Player/PlayerRobot.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Enemy/AI/EnemyAIController.h"
@@ -54,9 +55,9 @@ void AEnemyType3::AttackStart_Implementation()
 	if (AttackTarget)
 	{
 		FTransform SocketT = Gun->GetSocketTransform(TEXT("Rocket"));
-		FRotator Rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), AttackTarget->GetActorLocation());
-		Rot.Roll = 0;
-		Rot.Pitch = 0;
+		FRotator Rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), AttackTarget->pRobot->GetActorLocation());
+		//Rot.Roll = 0;
+		//Rot.Pitch = 0;
 		FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
 		FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
 

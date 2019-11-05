@@ -22,8 +22,6 @@ APlayerHoming::APlayerHoming()
 	RootComponent = Box;
 	Box->SetBoxExtent(FVector(76.0f, 26.0f, 21.0f));
 	Box->SetCollisionProfileName(TEXT("SelfBullet"));
-	Box->OnComponentBeginOverlap.AddDynamic(this, &APlayerHoming::DoActorBeginOverlap);
-
 	//--------------------------------------------------------
 
 
@@ -102,22 +100,3 @@ void APlayerHoming::HomingTrail()
 	ProjectileMovement->HomingAccelerationMagnitude = 5000.0f;
 }
 
-void APlayerHoming::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
-	class AActor* OtherActor,
-	class UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex,
-	bool bFromSweep,
-	const FHitResult& SweepResult)
-{
-	UE_LOG(LogClass, Warning,TEXT("TETETETE"));
-
-	SendDamage(OtherActor);
-
-	Destroy();
-}
-
-void APlayerHoming::SendDamage(AActor * OtherActor)
-{
-	UGameplayStatics::ApplyDamage(OtherActor, 100.0f
-		, UGameplayStatics::GetPlayerController(GetWorld(), 0), OtherActor, NULL);
-}
