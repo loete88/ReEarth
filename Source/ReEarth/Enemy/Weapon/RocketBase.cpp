@@ -19,7 +19,7 @@ ARocketBase::ARocketBase()
 	RootComponent = Box;
 	Box->SetBoxExtent(FVector(35.0f, 10.0f, 10.0f));
 	Box->SetCollisionProfileName(TEXT("EnemyBullet"));
-	Box->OnComponentBeginOverlap.AddDynamic(this, &ARocketBase::DoActorBeginOverlap);
+	//Box->OnComponentBeginOverlap.AddDynamic(this, &ARocketBase::DoActorBeginOverlap);
 
 	Rocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rocket"));
 	Rocket->SetupAttachment(Box);
@@ -40,6 +40,7 @@ ARocketBase::ARocketBase()
 	Movement->ProjectileGravityScale = 0.01f;
 }
 
+/*
 void ARocketBase::DoActorBeginOverlap(UPrimitiveComponent * OverlappedComp, 
 	AActor * OtherActor, UPrimitiveComponent * OtherComp, 
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
@@ -58,3 +59,4 @@ void ARocketBase::SendDamage(AActor * OtherActor)
 	UGameplayStatics::ApplyDamage(OtherActor, Damage
 		, UGameplayStatics::GetPlayerController(GetWorld(), 0), OtherActor, NULL);
 }
+*/
