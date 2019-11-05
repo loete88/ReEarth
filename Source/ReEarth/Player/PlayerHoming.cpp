@@ -8,6 +8,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "Enemy/Character/EnemyBase.h"
 
 // Sets default values
 APlayerHoming::APlayerHoming()
@@ -59,19 +60,15 @@ void APlayerHoming::Tick(float DeltaTime)
 
 }
 
-void APlayerHoming::Shot(AActor * Target)
+void APlayerHoming::Shot(AEnemyBase * Target)
 {
-	TargetEnemy = Target;
+	pTarget = Target;
 	
 	//Shot함수 호출시
 	//등뒤에 꽂혀있던 방향대로 앞으로 천천히 간다.
 	ProjectileMovement->MaxSpeed = 3000.0f;
 	
 	ProjectileMovement->Velocity = UKismetMathLibrary::GetForwardVector(Homing->K2_GetComponentRotation()) * 400;
-
-
-	//Aim Animation 재생
-
 
 	//Homing On 함수 호출
 	HomingOn();
@@ -82,16 +79,12 @@ void APlayerHoming::HomingOn()
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), HomingOnSound, GetActorLocation());
 
 	//EnemyTarget을 목표로 설정
-	//ProjectileMovement->HomingTargetComponent = 
+	ProjectileMovement->HomingTargetComponent = pTarget->HomingPosition;
 
 
 	FTransform ParticleTransform = UKismetMathLibrary::MakeTransform(FVector(),
 		FRotator(),
 		FVector(3.0f));
-
-	//Rocket 추진 Effect Spawn
-	UGameplayStatics::SpawnEmitterAttached(RocketPropel, Homing, TEXT("HomingEnd"),
-		FVector(),FRotator(),FVector(3.0f));
 
 	//Trail은 조금 추진하고 조금있다 생성
 	FTimerHandle TimerHandle;
@@ -102,8 +95,7 @@ void APlayerHoming::HomingTrail()
 {
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), TrailSound, GetActorLocation());
 
-	UGameplayStatics::SpawnEmitterAttached(TrailEffect, Homing, TEXT("HomingEnd"),
-		FVector(),FRotator(),FVector(2.0f));
+	UGameplayStatics::SpawnEmitterAttached(TrailEffect, Homing,TEXT("HomingEnd"));
 
 	ProjectileMovement->HomingAccelerationMagnitude = 5000.0f;
 }
