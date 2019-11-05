@@ -17,5 +17,11 @@ void UMainUIBase::NativeConstruct()
 
 void UMainUIBase::SetHPBar(float CurrentHP_Rate)
 {
+	
 	RobotHPBar->SetPercent(CurrentHP_Rate);
+}
+
+void UMainUIBase::SetMissileState(ESlateVisibility State, int iIdx)
+{
+
 }

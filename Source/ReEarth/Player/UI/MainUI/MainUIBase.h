@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "MainUIBase.generated.h"
 
+#define df_MISSILE_NUM 4
+
 /**
  * 
  */
@@ -18,8 +20,18 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	class UProgressBar * RobotHPBar;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<class UImage*> Missile;
+
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
 	void SetHPBar(float CurrentHP_Rate = 1.0f);
+
+
+	//UI를 보여줄지 숨길지 Set해주는 함수------------------
+	UFUNCTION()
+	void SetMissileState(ESlateVisibility State, int iIdx);
+	//-----------------------------------------------------
+
 };

@@ -391,7 +391,6 @@ void APlayerRobot::DamageProc(float Damage)
 {
 	if (RobotState == ERobotState::Dead)
 	{
-		
 		return;
 	}
 
