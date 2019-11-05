@@ -64,8 +64,17 @@ public:
 	void Shot(AEnemyBase * Target);
 	//-------------------------------------------------------
 
+	//충돌처리 함수
+	//-------------------------------------------------------
+	void DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
+		class AActor* OtherActor,
+		class UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+	//-------------------------------------------------------
 private:
-	
+
 	//Homing On함수
 	//-------------------------------------------------------
 	//TargetEnemy를 목표를 날아가도록 설정한다.
@@ -78,4 +87,5 @@ private:
 	void HomingTrail();
 	//-------------------------------------------------------
 
+	void SendDamage(AActor * OtherActor);
 };

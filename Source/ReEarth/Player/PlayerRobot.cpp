@@ -131,7 +131,7 @@ void APlayerRobot::BeginPlay()
 
 
 	//Controller 생성하기
-	//------------------------------------------
+	//------------------------------------------------------------------------------------------------
 	LeftController = GetWorld()->SpawnActor<ARemoteController>(LeftController_Template, FTransform());
 	RightController = GetWorld()->SpawnActor<ARemoteController>(RightController_Template, FTransform());
 
@@ -144,11 +144,15 @@ void APlayerRobot::BeginPlay()
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld, false),TEXT("RightControllerPosition"));
+	//------------------------------------------------------------------------------------------------
 
 
+	//초기 Homing 4개 생성
 	InitSpawnHoming();
+	//-------------------------
 
-	UE_LOG(LogClass, Warning, TEXT("Beginplay"));
+
+	MainUIUMG = Cast<UMainUIBase>(MainUI->GetUserWidgetObject());
 
 }
 
@@ -350,6 +354,9 @@ void APlayerRobot::HomingShot()
 		//7. 발사한 미사일 HomingArray에서 제거
 		APlayerHoming * pTargetHoming = HomingArray[0];
 		HomingArray.Remove(pTargetHoming);
+
+
+		MainUIUMG->UpdateRemoveMissile();
 	}
 	//---------------------------------------------------
 	//Homing Setting
@@ -383,7 +390,7 @@ void APlayerRobot::LockOff()
 float APlayerRobot::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
+	
 	DamageProc(DamageAmount);
 
 	return DamageAmount;
@@ -496,11 +503,8 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			FRotator ShotRotator = ShotTransform.GetRotation().Rotator();
 			GetWorld()->SpawnActor<APlayerBullet>(Bullet_Template, ShotLocation, ShotRotator);
 
-			//TESTTEST
 			if (nullptr != RightBasicAim)
 				RightBasicAim->PlayAnimation();
-			//TESTTEST
-
 		}
 	}
 }
@@ -555,6 +559,9 @@ void APlayerRobot::AddSpawnHoming()
 	//마지막으로 쏜지 5초가 지났고 현재 미사일 개수가 4개 미만일 때 생성
 	if (CurTime - LastShotTime >= 5.0f && CurrentHomingNum < 4)
 	{
+		//UI에서 미사일 하나 생성
+		MainUIUMG->UpdateAddMissile();
+
 		APlayerHoming * pNewHoming = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
 
 		FName HomingPosition;
