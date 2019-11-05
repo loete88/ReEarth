@@ -7,6 +7,7 @@
 #include "PlayerBullet.h"
 #include "Player/PlayerHoming.h"
 #include "Enemy/Character/EnemyBase.h"
+#include "Player/UI/Aim/HomingAimWidgetBase.h"
 #include "PlayerRobot.generated.h"
 
 
@@ -266,11 +267,11 @@ private:
 	int				CurrentHomingNum = 4;
 
 	//미사일 최대 범위
-	float			MinHitDist = 1000.0f;
+	float			MinHitDist = 100000000.0f;
 
 	//생성할 HomingAim 배열
 	//파괴시키기 위해서 들고있는다.
-	TArray<AActor*>	HomingAimArray;
+	TArray<AActor *>	HomingAimArray;
 
 	//미사일 개수가 4개 미만이고
 	//마지막 미사일을 쏜 후 5초가 지나면 새로운 미사일을 생성하기 위해

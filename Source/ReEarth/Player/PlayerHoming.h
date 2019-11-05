@@ -36,10 +36,6 @@ public:
 	//-------------------------------------------------------
 
 
-	//로켓 추진 효과로 사용할 Particle
-	UPROPERTY(EditAnywhere, Category = "Particle")
-	class UParticleSystem * RocketPropel;
-
 	//로켓 Trail 효과로 사용할 Particle
 	UPROPERTY(EditAnywhere, Category = "Particle")
 	class UParticleSystem * TrailEffect;
@@ -59,17 +55,16 @@ public:
 	//Target
 	//-------------------------------------------------------
 	//Enemy를 상속받은 Enemy Class에게로 날아간다.
-	class AEnemy * pTarget;
+	class AEnemyBase * pTarget;
 	//-------------------------------------------------------
 
 	//Shot함수
 	//-------------------------------------------------------
 	//APlayerRobot HomingShot함수에서 Homing준비가 되면 호출해준다.
-	void Shot(AActor * Target);
+	void Shot(AEnemyBase * Target);
 	//-------------------------------------------------------
 
 private:
-	AActor * TargetEnemy;
 	
 	//Homing On함수
 	//-------------------------------------------------------

@@ -24,6 +24,7 @@
 #include "Player/UI/Aim/NormalAimWidgetBase.h"
 #include "Player/UI/NormalAim.h"
 #include "Player/UI/MainUI/MainUIBase.h"
+#include "Player/UI/HomingAim.h"
 
 #define df_FIRE_DURATION 0.12f
 
@@ -282,6 +283,7 @@ void APlayerRobot::HomingShot()
 	//1. 전체 EnemyArray 순환
 	for (int iCnt = 0; iCnt < iLen; ++iCnt)
 	{
+
 		//2. 미사일이 없으면 break
 		if (0 == CurrentHomingNum)
 		{
@@ -291,6 +293,7 @@ void APlayerRobot::HomingShot()
 		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
 		float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
 
+		UE_LOG(LogClass, Warning, TEXT("%f"), fDistance);
 		
 		//4. 미사일 허용 범위안에 들어오고
 		//현재 카메라에 보이는 상태면 TargetArray에 추가
@@ -329,10 +332,10 @@ void APlayerRobot::HomingShot()
 		FTransform AimTransform = UKismetMathLibrary::MakeTransform(AimLocation, LookPlayerRotation,FVector(1.0f,1.0f,1.0f));
 
 		//	//2-4 HomingAim Spawn
-		AActor * pNewHomingAim = GetWorld()->SpawnActor<AActor>(HomingAim_Template, AimTransform);
+		AHomingAim * pHomingAim = GetWorld()->SpawnActor<AHomingAim>(HomingAim_Template, AimLocation, LookPlayerRotation);
 
 		////3. HomingAimArray에 넣고 나중에 한번에 소멸시킨다.
-		HomingAimArray.Add(pNewHomingAim);
+		HomingAimArray.Add(pHomingAim);
 
 
 		////4. 미사일 Detach
@@ -345,8 +348,8 @@ void APlayerRobot::HomingShot()
 		HomingArray[0]->Shot(TargetArray[iCnt]);
 
 		//7. 발사한 미사일 HomingArray에서 제거
-		HomingArray.Remove(HomingArray[0]);
-
+		APlayerHoming * pTargetHoming = HomingArray[0];
+		HomingArray.Remove(pTargetHoming);
 	}
 	//---------------------------------------------------
 	//Homing Setting
