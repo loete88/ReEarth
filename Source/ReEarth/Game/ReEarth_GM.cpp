@@ -5,6 +5,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
+#include "Engine/Classes/Kismet/StereoLayerFunctionLibrary.h"
+
+void AReEarth_GM::BeginPlay()
+{
+	//Loading 화면 설정하기
+	//----------------------------------------------------------------
+	UStereoLayerFunctionLibrary::EnableAutoLoadingSplashScreen(true);
+	UStereoLayerFunctionLibrary::SetSplashScreen(LoadTexture);
+	UStereoLayerFunctionLibrary::HideSplashScreen();
+	//----------------------------------------------------------------
+}
 
 void AReEarth_GM::GameStart()
 {

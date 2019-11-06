@@ -15,6 +15,8 @@ class REEARTH_API AReEarth_GM : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	virtual void BeginPlay() override;
+
 	//GameStart함수
 	//----------------------
 	//MainMap으로 이동
@@ -26,4 +28,7 @@ public:
 	//게임 종료
 	void GameExit();
 	//----------------------
+
+	UPROPERTY(EditAnywhere)
+	UTexture * LoadTexture;
 };
