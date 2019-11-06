@@ -21,12 +21,18 @@ public:
 	class UProgressBar * RobotHPBar;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UProgressBar * HomingCoolTimeBar;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<class UImage*> Missile;
 
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
 	void SetHPBar(float CurrentHP_Rate = 1.0f);
+
+	UFUNCTION()
+	void SetHomingCoolTimeBar(float CurrentCoolTime_Rate = 0.0f);
 
 	//Missile UI ÇÑ°³ ¼û±â±â
 	UFUNCTION()

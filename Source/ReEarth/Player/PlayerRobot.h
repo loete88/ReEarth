@@ -239,11 +239,20 @@ public:
 
 
 private:
-	//총 발사시 텀을 주기위한 private변수----------
-	//발사 후 누적 시간을 저장한다.
-	float LeftAccumulation	= 0;
-	float RightAccumulation = 0;
+	//총 발사시 텀을 주기위한 Handle---------------
+	FTimerHandle LeftShotTimerHandle;
+	FTimerHandle RightShotTimerHandle;
 	//---------------------------------------------
+
+	//유도 미사일을 쏜 후 Aim 정리와 배열 정리를 위한 Handle
+	FTimerHandle ClearTargetArrayTimerHandle;
+	//-------------------------------------------------------
+
+	//유도 미사일 쿨타임을 위한 Handle-----------------------
+	FTimerHandle HomingSpawnTimerHandle;
+	FTimerHandle HomingCoolTimeUITimerHandle;
+	//-------------------------------------------------------
+
 
 	//기본 공격 Aim관련 변수-----------------------
 	bool IsLeftAimOn = false;
@@ -263,6 +272,8 @@ private:
 	//Target으로할 Enemy Array
 	TArray<AEnemyBase*>	TargetArray;
 
+	
+
 	//현재 미사일 개수
 	int				CurrentHomingNum = 4;
 
@@ -278,24 +289,30 @@ private:
 	//필요한 Check Time
 	float			HomingTimeCheck =0.0f;
 
-	//미사일을 추가할 위치
+	//다음 미사일을 추가할 위치
 	EHomingLocation CurAddHomingPosition = EHomingLocation::LeftUp;
-
 	//---------------------------------------------
 
-
-	//---------------------------------------------
 	void ClearTargetArray();
+
+
+	//기본 공격 SetTimer에 등록할 CallBack함수
+	//---------------------------------------------
+	void LeftShotCallBack();
+	void RightShotCallBack();
+	//---------------------------------------------
+
 
 	//-----------------------------------------------------------------------------------
 	//Shot함수																			//
 	//HandState : 오른쪽 or 왼쪽의 HandState를 넣어주면 된다.							//
-	//DeltaTime : Tick의 DeltaTime을 넣어주면 된다.										//
 	//Left		: 왼쪽의 HandState면 true, 오른쪽의 HandState면 false를 넣어주면 된다.	//	
 	//define으로 df_FIRE_DURATION을 0.12f로 정의했는데									//
 	//0.12초 마다 한 번씩 발사해주는 함수다.											//
-	void Shot(EHandState HandState,float DeltaTime, bool Left);							//
+	void Shot(EHandState HandState, bool Left);										//
 	//-----------------------------------------------------------------------------------
+
+
 
 
 	//-----------------------------------------------------------------------------------
@@ -315,4 +332,10 @@ private:
 	//기본 공격 Aim을 생성해야하면 생성, 소멸시켜야하면 소멸시킨다.
 	void UpdateAim(FName SocketName,bool & AimState, class ANormalAim *& AimSide,bool IsLeft);
 	//-----------------------------------------------------------------------------------
+
+	//---------------------------------------------
+	//Update Homing CoolTime 함수
+	//미사일이 생성할 때 까지 필요한 시칸 UI Update
+	void UpdateHomingCoolTime();
+	//---------------------------------------------
 };

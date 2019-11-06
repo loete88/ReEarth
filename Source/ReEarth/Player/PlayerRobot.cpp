@@ -26,8 +26,14 @@
 #include "Player/UI/MainUI/MainUIBase.h"
 #include "Player/UI/HomingAim.h"
 
+//기본 공격 발사 주기(초단위)
 #define df_FIRE_DURATION 0.12f
 
+//미사일 생성 주기(초단위)
+#define df_HOMINGSPAWN_DURATION 5.0f
+
+//미사일 생성 쿨타임 UI 업데이트 주기
+#define df_HOMINGCOOLTIMEUI_UPDATE_DURATION 0.2f
 
 // Sets default values
 APlayerRobot::APlayerRobot()
@@ -157,24 +163,8 @@ void APlayerRobot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//플레이어 총 발사 Logic
-	//-------------------------------------------
-	Shot(LeftAttackState,DeltaTime,true);
-	Shot(RightAttackState,DeltaTime,false);
-	//-------------------------------------------
-	//플레이어 총 발사 Logic
-
-
-	//플레이어 미사일 생성 Logic
-	//-------------------------------------------
-	AddSpawnHoming();
-	//-------------------------------------------
-	//플레이어 미사일 생성 Logic
-
-
 	UpdateAim(TEXT("LeftShotPosition"), IsLeftAimOn, LeftBasicAim,true);
 	UpdateAim(TEXT("RightShotPosition"), IsRightAimOn, RightBasicAim,false);
-
 }
 
 // Called to bind functionality to input
@@ -228,6 +218,7 @@ void APlayerRobot::LeftShot()
 	if (LeftAttackState == EHandState::Attackable)
 	{
 		LeftAttackState = EHandState::Attack;
+		Shot(LeftAttackState, true);
 	}
 }
 
@@ -247,6 +238,7 @@ void APlayerRobot::RightShot()
 	if (RightAttackState == EHandState::Attackable)
 	{
 		RightAttackState = EHandState::Attack;
+		Shot(RightAttackState, false);
 	}
 }
 
@@ -292,8 +284,6 @@ void APlayerRobot::HomingShot()
 
 		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
 		float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
-
-		UE_LOG(LogClass, Warning, TEXT("%f"), fDistance);
 		
 		//4. 미사일 허용 범위안에 들어오고
 		//현재 카메라에 보이는 상태면 TargetArray에 추가
@@ -351,7 +341,12 @@ void APlayerRobot::HomingShot()
 		APlayerHoming * pTargetHoming = HomingArray[0];
 		HomingArray.Remove(pTargetHoming);
 
+		//8. UI상 Missile 갯수 줄이기
 		MainUIUMG->UpdateRemoveMissile();
+
+		//9. Homing Spawn Timer Handle 작동
+		GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
+		UpdateHomingCoolTime();
 	}
 	//---------------------------------------------------
 	//Homing Setting
@@ -366,8 +361,7 @@ void APlayerRobot::HomingShot()
 	TargetArray.Empty();
 
 	//Homing Aim을 보여주기위한 약간의 Delay
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerRobot::ClearTargetArray, 1.5f, false);
+	GetWorldTimerManager().SetTimer(ClearTargetArrayTimerHandle, this, &APlayerRobot::ClearTargetArray, 1.5f, false);
 	//----------------------------------------------------
 	//필요한 & 사용한 변수들 갱신
 }
@@ -447,7 +441,20 @@ void APlayerRobot::ClearTargetArray()
 	HomingAimArray.Empty();
 }
 
-void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
+
+void APlayerRobot::LeftShotCallBack()
+{
+	Shot(LeftAttackState, true);
+}
+
+void APlayerRobot::RightShotCallBack()
+{
+	Shot(RightAttackState, false);
+}
+
+
+
+void APlayerRobot::Shot(EHandState HandState, bool Left)
 {
 	//공격 상태일 때만 총알을 생성한다.
 	if (HandState == EHandState::Attack)
@@ -455,18 +462,7 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 		//1. 왼쪽인 경우
 		if (Left)
 		{
-			//1-1 아직 전 발사에 대한 텀이 안 끝난 경우
-			if (LeftAccumulation < df_FIRE_DURATION)
-			{
-				LeftAccumulation += DeltaTime;
-				return;
-			}
-
-			//1-2 총을 발사하니까 누적시간 0으로 바꾸기
-			LeftAccumulation = 0;
-			//--------------------------------------
-
-			//1-3 총알 생성 위치 설정 및 생성
+			//1-1 총알 생성 위치 설정 및 생성
 			FTransform ShotTransform = GetMesh()->GetSocketTransform(TEXT("LeftShotPosition"));
 			FVector ShotLocation = ShotTransform.GetLocation();
 			FRotator ShotRotator = ShotTransform.GetRotation().Rotator();
@@ -474,35 +470,30 @@ void APlayerRobot::Shot(EHandState HandState, float DeltaTime,bool Left)
 			//--------------------------------------------------------------------------------
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ShotLocation);
 
-	
-			//존재 할 때만 Aim animation play
-			if(nullptr != LeftBasicAim)
+
+			//1-2 존재 할 때만 Aim animation play
+			if (nullptr != LeftBasicAim)
 				LeftBasicAim->PlayAnimation();
 
+			//1-3 다음번 발사를 위한 Timer설정
+			GetWorldTimerManager().SetTimer(LeftShotTimerHandle, this, &APlayerRobot::LeftShotCallBack, df_FIRE_DURATION, false);
 		}
-		
+
 		//2. 오른쪽인 경우
 		else
 		{
-			if (RightAccumulation < df_FIRE_DURATION)
-			{
-				RightAccumulation += DeltaTime;
-				return;
-			}
-
-			RightAccumulation = 0;
-
 			FTransform ShotTransform = GetMesh()->GetSocketTransform(TEXT("RightShotPosition"));
 			FVector ShotLocation = ShotTransform.GetLocation();
 			FRotator ShotRotator = ShotTransform.GetRotation().Rotator();
 			GetWorld()->SpawnActor<APlayerBullet>(Bullet_Template, ShotLocation, ShotRotator);
 
-			//TESTTEST
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ShotLocation);
+
 			if (nullptr != RightBasicAim)
 				RightBasicAim->PlayAnimation();
-			//TESTTEST
 
-		}
+			GetWorldTimerManager().SetTimer(RightShotTimerHandle, this, &APlayerRobot::RightShotCallBack, df_FIRE_DURATION, false);
+		}		
 	}
 }
 
@@ -550,14 +541,12 @@ void APlayerRobot::InitSpawnHoming()
 
 void APlayerRobot::AddSpawnHoming()
 {
-	float CurTime = UGameplayStatics::GetTimeSeconds(GetWorld());
-	float LastShotTime = HomingTimeCheck;
-
-	//마지막으로 쏜지 5초가 지났고 현재 미사일 개수가 4개 미만일 때 생성
-	if (CurTime - LastShotTime >= 5.0f && CurrentHomingNum < 4)
+	//현재 미사일 개수가 4개 미만일 때 생성
+	if (CurrentHomingNum < 4)
 	{
 		APlayerHoming * pNewHoming = GetWorld()->SpawnActor<APlayerHoming>(Homing_Template);
 
+		//현재 추가해야하는 위치에 추가하기 위한 switch문
 		FName HomingPosition;
 		switch (CurAddHomingPosition)
 		{
@@ -594,18 +583,21 @@ void APlayerRobot::AddSpawnHoming()
 
 		}
 
+		//미사일 Mesh에 Attach시키기
 		pNewHoming->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld, false), HomingPosition);
 
-
-		HomingTimeCheck = UGameplayStatics::GetTimeSeconds(GetWorld());
+		//미사일 갯수 Update
 		++CurrentHomingNum;
 		
-
+		//배열에 추가
 		HomingArray.Add(pNewHoming);
 
+		//UI Update
 		MainUIUMG->UpdateAddMissile();
+
+		GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
 	}
 }
 
@@ -676,5 +668,22 @@ void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& Ai
 		}
 	}
 
+}
+
+void APlayerRobot::UpdateHomingCoolTime()
+{
+	if (MainUIUMG->HomingCoolTimeBar && CurrentHomingNum < 4)
+	{
+		float RemainTime = UKismetSystemLibrary::K2_GetTimerRemainingTimeHandle(GetWorld(), HomingSpawnTimerHandle);
+
+		MainUIUMG->SetHomingCoolTimeBar(1 - (RemainTime / df_HOMINGSPAWN_DURATION));
+
+		GetWorldTimerManager().SetTimer(HomingCoolTimeUITimerHandle, this,
+			&APlayerRobot::UpdateHomingCoolTime, df_HOMINGCOOLTIMEUI_UPDATE_DURATION, false);
+	}
+	else if (CurrentHomingNum == 4)
+	{
+		MainUIUMG->SetHomingCoolTimeBar();
+	}
 }
 

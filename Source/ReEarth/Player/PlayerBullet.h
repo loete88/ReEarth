@@ -58,9 +58,10 @@ public:
 	//-----------------------------------------------------------------------
 	
 	
-	void SendDamage(AActor * OtherActor);
 
 
 private:
 	const float PlayerBulletDamage = 20.0f;
+	
+	void SendDamage(AActor * OtherActor);
 };

@@ -10,6 +10,9 @@ void UMainUIBase::NativeConstruct()
 	Super::NativeConstruct();
 
 	RobotHPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("Bar")));
+
+	HomingCoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("Cycle")));
+
 	for (int iCnt = 0; iCnt < df_MISSILE_NUM; ++iCnt)
 	{
 		FString MissileText = FString("Missile_").Append(FString::FromInt(iCnt+1));
@@ -20,13 +23,17 @@ void UMainUIBase::NativeConstruct()
 	//초기에는 꽉 차있는 상태
 	SetHPBar();
 
-
-
+	SetHomingCoolTimeBar();
 }
 
 void UMainUIBase::SetHPBar(float CurrentHP_Rate)
 {
 	RobotHPBar->SetPercent(CurrentHP_Rate);
+}
+
+void UMainUIBase::SetHomingCoolTimeBar(float CurrentCoolTime_Rate)
+{
+	HomingCoolTimeBar->SetPercent(CurrentCoolTime_Rate);
 }
 
 void UMainUIBase::UpdateRemoveMissile()

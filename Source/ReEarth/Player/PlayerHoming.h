@@ -35,6 +35,9 @@ public:
 	class UProjectileMovementComponent * ProjectileMovement;
 	//-------------------------------------------------------
 
+	//로켓 Collision 효과로 사용할 Particle
+	UPROPERTY(EditAnywhere, Category = "Particle")
+	class UParticleSystem * CollisionEffect;
 
 	//로켓 Trail 효과로 사용할 Particle
 	UPROPERTY(EditAnywhere, Category = "Particle")
@@ -64,6 +67,18 @@ public:
 	void Shot(AEnemyBase * Target);
 	//-------------------------------------------------------
 
+
+	//충돌 처리
+	//충돌 파티클 재생하고 상대에게 Damage를 먹인 후 파괴된다. 
+	UFUNCTION()
+		void DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
+	//-----------------------------------------------------------------------
+
 private:
 	
 	//Homing On함수
@@ -78,4 +93,8 @@ private:
 	void HomingTrail();
 	//-------------------------------------------------------
 
+	//Damage처리 해주는 함수
+	//-------------------------------------
+	void SendDamage(AActor * OtherActor);
+	//-------------------------------------
 };
