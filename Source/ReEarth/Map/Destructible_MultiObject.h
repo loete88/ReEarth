@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class UBoxComponent * Box;
+	class UBoxComponent * BoxRoot;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	class UParticleSystem* SparkParticle;	
@@ -32,16 +32,22 @@ public:
 	class UParticleSystem* ExplosionParticle;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	class UPhysicalMaterial* PM;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float ImpulseRadius;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float ImpulseStrength;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<class UNavAreaBase> AreaClass;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TArray<UBoxComponent*> ChildInChildComponent;
 	bool LoopBool;
 	int HP;
 	int MaxHP;
 
 	UFUNCTION()
-	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	void FindChildComponent(UBoxComponent* Target, TArray<UBoxComponent*> SetIndex);
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, 
+		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void FindChildComponent(UBoxComponent* Target, TArray<UBoxComponent*> &SetIndex);
 };
