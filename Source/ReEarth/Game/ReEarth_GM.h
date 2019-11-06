@@ -14,4 +14,16 @@ class REEARTH_API AReEarth_GM : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	//GameStart함수
+	//----------------------
+	//MainMap으로 이동
+	void GameStart();
+	//----------------------
+
+	//GameExit함수
+	//----------------------
+	//게임 종료
+	void GameExit();
+	//----------------------
 };

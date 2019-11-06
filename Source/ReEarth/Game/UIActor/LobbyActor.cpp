@@ -52,6 +52,6 @@ void ALobbyActor::Tick(float DeltaTime)
 
 void ALobbyActor::DoActorBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestStart"));
+	
 }
 

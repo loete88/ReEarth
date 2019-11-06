@@ -14,7 +14,6 @@
 // Sets default values
 APlayerBullet::APlayerBullet()
 {
-	int a = 1;
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -74,6 +73,9 @@ void APlayerBullet::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedCom
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
+	FString test(OtherComp->GetName());
+	UE_LOG(LogClass, Warning, TEXT("%s"), *test);
+
 	//여기에 들어가야하는 것
 	//Enemy클래스로 형변환해서 성공하면 SpawnEmitterAt location 호출한다.
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, UKismetMathLibrary::MakeTransform(GetActorLocation(), FRotator(), FVector(4.0f)));

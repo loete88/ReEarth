@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "StartActor.generated.h"
+#include "ExitActor.generated.h"
 
 UCLASS()
-class REEARTH_API AStartActor : public AActor
+class REEARTH_API AExitActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AStartActor();
+	AExitActor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,25 +22,25 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 	//Component
-	//------------------------------------------
+//------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UBoxComponent * Box;
+	class UBoxComponent * Box;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent * Mesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UStaticMeshComponent * Mesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UWidgetComponent * Widget;
+	class UWidgetComponent * Widget;
 	//------------------------------------------
 	//Component
 
 	UFUNCTION()
-	void DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
-		class AActor* OtherActor,
-		class UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
-
+		void DoActorBeginOverlap(class UPrimitiveComponent* OverlappedComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
 };
