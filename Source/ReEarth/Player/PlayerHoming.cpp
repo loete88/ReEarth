@@ -21,7 +21,7 @@ APlayerHoming::APlayerHoming()
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	RootComponent = Box;
 	Box->SetBoxExtent(FVector(76.0f, 26.0f, 21.0f));
-	Box->SetCollisionProfileName(TEXT("SelfBullet"));
+	Box->SetCollisionProfileName(TEXT("NoCollision"));//처음에 NoCollision으로 발사하면 Collision 정해주기
 	Box->OnComponentBeginOverlap.AddDynamic(this, &APlayerHoming::DoActorBeginOverlap);
 	//--------------------------------------------------------
 
@@ -63,6 +63,7 @@ void APlayerHoming::Tick(float DeltaTime)
 
 void APlayerHoming::Shot(AEnemyBase * Target)
 {
+	Box->SetCollisionProfileName(TEXT("SelfBullet"));
 	pTarget = Target;
 	
 	//Shot함수 호출시

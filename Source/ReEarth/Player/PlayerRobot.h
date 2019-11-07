@@ -186,6 +186,12 @@ public:
 	class ARemoteController * RightController;
 	//---------------------------------------------------
 
+	//FadeOut LevelSquence
+	//---------------------------------------------------
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	class ULevelSequence * FadeOut;
+	//---------------------------------------------------
+
 
 	//입력 Event 처리 함수
 	//---------------------------------------------------
@@ -253,6 +259,10 @@ private:
 	FTimerHandle HomingCoolTimeUITimerHandle;
 	//-------------------------------------------------------
 
+	//FadeOut 효과를 보여주기위한 Handle---------------------
+	//Lobby로 가기까지 약간의 시간을 준다
+	FTimerHandle GotoLobbyTimerHandle;
+	//-------------------------------------------------------
 
 	//기본 공격 Aim관련 변수-----------------------
 	bool IsLeftAimOn = false;
@@ -337,5 +347,11 @@ private:
 	//Update Homing CoolTime 함수
 	//미사일이 생성할 때 까지 필요한 시칸 UI Update
 	void UpdateHomingCoolTime();
+	//---------------------------------------------
+
+
+	//---------------------------------------------
+	//GoToLobby
+	void GoToLobby();
 	//---------------------------------------------
 };

@@ -25,6 +25,10 @@
 #include "Player/UI/NormalAim.h"
 #include "Player/UI/MainUI/MainUIBase.h"
 #include "Player/UI/HomingAim.h"
+#include "Game/ReEarth_GM.h"
+#include "LevelSequence/Public/LevelSequencePlayer.h"
+#include "MovieScene/Public/MovieSceneSequencePlayer.h"
+
 
 //기본 공격 발사 주기(초단위)
 #define df_FIRE_DURATION 0.12f
@@ -38,6 +42,7 @@
 // Sets default values
 APlayerRobot::APlayerRobot()
 {
+	
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -404,11 +409,18 @@ void APlayerRobot::DamageProc(float Damage)
 
 
 	//죽은경우
-	if (CurrentHP < 0)
+	if (CurrentHP == 0)
 	{
+		ALevelSequenceActor * Temp;
 		//Fade Out 실행
-
+		ULevelSequencePlayer * LSP = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(),
+			FadeOut, FMovieSceneSequencePlaybackSettings(),Temp);
+		
+		LSP->Play();
 		//Fade Out 실행
+	
+		//FadeOut 실행후 Lobby로 이동
+		GetWorldTimerManager().SetTimer(GotoLobbyTimerHandle, this, &APlayerRobot::GoToLobby, 2.0f, false);
 	}
 
 }
@@ -510,7 +522,7 @@ void APlayerRobot::InitSpawnHoming()
 
 
 	//왼쪽 아래 Homing 생성
-	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template, GetActorTransform()));
 	HomingArray[(int)EHomingLocation::LeftDown]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
@@ -520,7 +532,7 @@ void APlayerRobot::InitSpawnHoming()
 
 
 	//오른쪽 위 Homing 생성
-	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template, GetActorTransform()));
 	HomingArray[(int)EHomingLocation::RightUp]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
@@ -530,7 +542,7 @@ void APlayerRobot::InitSpawnHoming()
 
 
 	//왼쪽 아래 Homing 생성
-	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template, GetActorTransform()));
 	HomingArray[(int)EHomingLocation::RightDown]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
@@ -687,3 +699,12 @@ void APlayerRobot::UpdateHomingCoolTime()
 	}
 }
 
+
+void APlayerRobot::GoToLobby()
+{
+	AReEarth_GM * GM = Cast<AReEarth_GM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GM)
+	{
+		GM->GoToLobby();
+	}
+}

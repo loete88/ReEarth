@@ -95,7 +95,6 @@ void APlayerPawn::BeginPlay()
 	//--------------------------------------------------------------------------------
 	//시작시 Robot 생성해서 가지고 있고 PlayerPosition에 Attach시킨다.
 
-	//본인 것만 생성------------
 	pRobot = GetWorld()->SpawnActor<APlayerRobot>(Robot_Template, GetActorTransform());
 
 	AttachToComponent(pRobot->GetMesh(),
