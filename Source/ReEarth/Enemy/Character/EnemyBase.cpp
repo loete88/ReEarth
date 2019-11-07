@@ -52,7 +52,7 @@ void AEnemyBase::Tick(float DeltaTime)
 			ObstacleTraceType,
 			false,
 			IgnoreActors,
-			EDrawDebugTrace::ForOneFrame,
+			EDrawDebugTrace::None,
 			OutHit,
 			true);
 
@@ -141,6 +141,11 @@ AActor* AEnemyBase::GetDestinationTarget()
 bool AEnemyBase::GetVisibleAttackTarget()
 {
 	return IsVisibleAttackTarget;
+}
+
+float AEnemyBase::GetAttackTargetRot()
+{
+	return 0.0f;
 }
 
 //------------------------------------------------------------------------------------

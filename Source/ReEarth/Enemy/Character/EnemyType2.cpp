@@ -16,13 +16,13 @@ AEnemyType2::AEnemyType2()
 	CurrentHP = MaxHP;
 
 	//--------------------------------------------
-	GetCapsuleComponent()->SetCapsuleHalfHeight(400);
-	GetCapsuleComponent()->SetCapsuleRadius(400);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(120);
+	GetCapsuleComponent()->SetCapsuleRadius(120);
 
 	//--------------------------------------------
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -400));
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
 	GetMesh()->SetRelativeRotation(FRotator(0, 0, 0));
-	GetMesh()->SetWorldScale3D(FVector(1.5f, 1.5f, 1.5f));
+	GetMesh()->SetWorldScale3D(FVector(0.7f, 0.7f, 0.7f));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MeshAsset(
 		TEXT("/Game/AssetContents/CSC/Meshes/SK_CSC_Base1.SK_CSC_Base1"));

@@ -18,10 +18,14 @@ public:
 	class AEnemyBase* Pawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<EEnemyState> State;
+	EEnemyState State;
+	//TEnumAsByte<EEnemyState> State;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsRunning;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackTargetRot;
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	

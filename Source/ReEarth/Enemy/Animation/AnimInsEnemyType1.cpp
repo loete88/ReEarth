@@ -13,6 +13,8 @@ void UAnimInsEnemyType1::NativeUpdateAnimation(float DeltaSeconds)
 
 		Pawn->GetVelocity();
 		UKismetMathLibrary::VSizeXYSquared(Pawn->GetVelocity()) != 0.0f ? IsRunning = true : IsRunning = false;
+
+		AttackTargetRot = Pawn->GetAttackTargetRot();
 	}
 }
 

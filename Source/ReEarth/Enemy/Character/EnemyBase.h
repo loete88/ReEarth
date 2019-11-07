@@ -52,7 +52,7 @@ public:
 	bool IsDead = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool EnableMove = true;
+	bool EnableMove = false;
 	   
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsVisibleAttackTarget = false;
@@ -73,6 +73,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool GetVisibleAttackTarget();
 
+	UFUNCTION(BlueprintCallable)
+	virtual float GetAttackTargetRot();
+		
 	//------------------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void AttackStart();
