@@ -15,13 +15,13 @@
 AEnemyType1::AEnemyType1()
 {
 	//--------------------------------------------
-	GetCapsuleComponent()->SetCapsuleHalfHeight(500);
-	GetCapsuleComponent()->SetCapsuleRadius(300);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(280);
+	GetCapsuleComponent()->SetCapsuleRadius(180);
 	
 	//--------------------------------------------
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -500));
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -280));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
-	GetMesh()->SetWorldScale3D(FVector(4.0f, 4.0f, 4.0f));
+	GetMesh()->SetWorldScale3D(FVector(2.8f, 2.8f, 2.8f));
 	   
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>MeshAsset(
 		TEXT("/Game/AssetContents/ModularSciFiHeroesHP/Mesh/MeshForInternalAnimations/forIntAnim_UnifiedCharacters/Int_UnifiedCharacter01_SK.Int_UnifiedCharacter01_SK"));
