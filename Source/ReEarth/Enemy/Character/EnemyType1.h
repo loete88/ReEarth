@@ -30,6 +30,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor> Rocket_Template;
 
+	float GetAttackTargetRot();
+
 	//------------------------------------------------------------------------------------
 	void AttackStart_Implementation();
 

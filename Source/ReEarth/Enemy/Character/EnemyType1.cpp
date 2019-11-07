@@ -3,12 +3,14 @@
 
 #include "EnemyType1.h"
 #include "Player/VRHand/PlayerPawn.h"
+#include "Player/PlayerRobot.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Enemy/AI/EnemyAIController.h"
 #include "Enemy/Weapon/RocketBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Math/Vector.h"
 
 AEnemyType1::AEnemyType1()
 {
@@ -36,6 +38,36 @@ AEnemyType1::AEnemyType1()
 	{
 		Weapon->SetSkeletalMesh(WeaponAsset.Object);
 	}
+}
+
+float AEnemyType1::GetAttackTargetRot()
+{
+	if (AttackTarget)
+	{
+		//FVector Loc1 = Weapon->GetSocketLocation(TEXT("WeaponSocket"));
+		FVector Loc1 = GetActorLocation();
+		FVector Loc2 = AttackTarget->pRobot->GetActorLocation();
+				
+		FVector EnemyForwardVector = GetActorForwardVector();
+		FVector EnemyToTargetVector = Loc2 - Loc1;
+		
+		float ResultDotProduct = UKismetMathLibrary::Dot_VectorVector(EnemyForwardVector, EnemyToTargetVector);
+
+		float Loc1Length = UKismetMathLibrary::VSize(EnemyForwardVector);
+		float Loc2Length = UKismetMathLibrary::VSize(EnemyToTargetVector);
+		float Angle = UKismetMathLibrary::DegAcos(ResultDotProduct / (Loc1Length*Loc2Length));
+		
+		if (Loc1.Z > Loc2.Z)
+		{
+			Angle *= -1;
+		}
+
+		//UE_LOG(LogTemp, Log, TEXT("UAnimInsEnemyType1 angle   :: %f"), Angle);
+
+		return Angle;
+		//return Rot.Roll;
+	}
+	return 0.0f;
 }
 
 //------------------------------------------------------------------------------------
@@ -75,6 +107,7 @@ void AEnemyType1::RotateAttactTargetLoc_Implementation()
 	if (AttackTarget)
 	{		
 		FRotator Rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), AttackTarget->GetActorLocation());
-		SetActorRotation(Rot);
+		FRotator ResultRot = FRotator(0, Rot.Yaw, 0);
+		SetActorRotation(ResultRot);
 	}
 }

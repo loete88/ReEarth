@@ -21,7 +21,8 @@ public:
 	class AEnemyBase* Pawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<EEnemyState> State;
+	EEnemyState State;
+	//TEnumAsByte<EEnemyState> State;
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
