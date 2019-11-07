@@ -24,6 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FStageStruct> StageIndex;
+
+	UFUNCTION(BlueprintCallable)
+	void SetterUse(int num);
 };

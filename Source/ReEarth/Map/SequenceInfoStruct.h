@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SequenceInfoStruct.h"
-#include "StageStruct.generated.h"
+#include "LevelSequence\Public\LevelSequencePlayer.h"
+#include "SequenceInfoStruct.generated.h"
 
 USTRUCT(BlueprintType)
-struct FStageStruct
+struct FSequenceInfoStruct
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	struct FSequenceInfoStruct* fdfd;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<FSequenceInfoStruct> sequenceInfo;
-	bool isUse = false;
-	int Wave = 0;
+	class ULevelSequence* LevelSequence;
+	class ULevelSequencePlayer* LevelSequencePlayer;	
+	bool isPlay;
 };
