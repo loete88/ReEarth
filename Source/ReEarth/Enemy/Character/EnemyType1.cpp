@@ -48,10 +48,7 @@ void AEnemyType1::AttackStart_Implementation()
 	if (CheckAttackStart)
 	{
 		FTransform SocketT = Weapon->GetSocketTransform(TEXT("WeaponSocket"));
-		FRotator Rot;
-		Rot.Roll = 0;
-		Rot.Pitch = 0;
-		Rot.Yaw = GetActorRotation().Yaw;
+		FRotator Rot = Weapon->GetSocketRotation(TEXT("WeaponSocket"));
 		FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
 		FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
 		
