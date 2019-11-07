@@ -45,8 +45,8 @@ public:
 private:
 	//SetAimAngle함수
 	//-----------------------------------------------------
-	//해당 손의 WorldRotation값을 가져와서
-	//AimYaw, AimPitch에 값을 넣어준다.
-	//void SetAimAngle(class USkeletalMeshComponent * Hand);
+	//해당 손의 Rotation값을 가져와서
+	//AimYaw에 값을 넣어준다.
+	float ComputeYaw(class USkeletalMeshComponent * Hand);
 	//-----------------------------------------------------
 };

@@ -26,6 +26,7 @@
 #include "Player/UI/MainUI/MainUIBase.h"
 #include "Player/UI/HomingAim.h"
 
+
 //기본 공격 발사 주기(초단위)
 #define df_FIRE_DURATION 0.12f
 
@@ -510,7 +511,7 @@ void APlayerRobot::InitSpawnHoming()
 
 
 	//왼쪽 아래 Homing 생성
-	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template, GetActorTransform()));
 	HomingArray[(int)EHomingLocation::LeftDown]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
@@ -520,7 +521,7 @@ void APlayerRobot::InitSpawnHoming()
 
 
 	//오른쪽 위 Homing 생성
-	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template, GetActorTransform()));
 	HomingArray[(int)EHomingLocation::RightUp]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
@@ -530,7 +531,7 @@ void APlayerRobot::InitSpawnHoming()
 
 
 	//왼쪽 아래 Homing 생성
-	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template));
+	HomingArray.Add(GetWorld()->SpawnActor<APlayerHoming>(Homing_Template, GetActorTransform()));
 	HomingArray[(int)EHomingLocation::RightDown]->AttachToComponent(GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::SnapToTarget,
