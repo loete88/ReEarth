@@ -22,20 +22,24 @@ void AStageManager::BeginPlay()
 
 	for (auto ind : StageIndex)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("a = %d"), a);
 		for (auto seq : ind.sequenceInfo)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("b = %d"), b);
 			if (seq.LevelSequence != nullptr)
 			{
 				FMovieSceneSequencePlaybackSettings set;
 				ALevelSequenceActor* dummyActor;
-				seq.LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
-					this,
+
+				ULevelSequencePlayer * t = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(),
+					seq.LevelSequence, FMovieSceneSequencePlaybackSettings(), dummyActor);
+
+				StageIndex[0].sequenceInfo[0].LevelSequencePlayer = t;
+
+				/*seq.LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+					GetWorld(),
 					seq.LevelSequence,
 					set,
 					dummyActor
-				);
+				);*/
 				
 				//if(seq.LevelSequencePlayer)
 				//	UE_LOG(LogTemp, Warning, TEXT("eeeeeeeee"));

@@ -12,9 +12,11 @@ struct FStageStruct
 	GENERATED_USTRUCT_BODY()
 
 public:
-	struct FSequenceInfoStruct* fdfd;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FSequenceInfoStruct> sequenceInfo;
+
+
+
 	bool isUse = false;
 	int Wave = 0;
 };
