@@ -28,3 +28,8 @@ void AReEarth_GM::GameExit()
 		UGameplayStatics::GetPlayerController(GetWorld(), 0),
 		EQuitPreference::Quit, false);
 }
+
+void AReEarth_GM::GoToLobby()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestStart"));
+}

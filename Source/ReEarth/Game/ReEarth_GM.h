@@ -29,6 +29,12 @@ public:
 	void GameExit();
 	//----------------------
 
+	//GoToLobby함수
+	//----------------------
+	//StartMap으로 이동
+	void GoToLobby();
+	//----------------------
+
 	UPROPERTY(EditAnywhere)
 	UTexture * LoadTexture;
 };
