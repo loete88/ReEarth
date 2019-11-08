@@ -24,7 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	class AEnemyBase;
+	//class AEnemyBase;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FStageStruct> StageIndex;

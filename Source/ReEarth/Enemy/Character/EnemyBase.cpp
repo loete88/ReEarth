@@ -12,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Map/StageManager.h"
 
 //------------------------------------------------------------------------------------
 AEnemyBase::AEnemyBase()
@@ -99,6 +100,19 @@ void AEnemyBase::AddEnemy()
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("EnemyBase :: AddEnemy Fail"));
+	}
+	TArray<AActor*> arrOutActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStageManager::StaticClass(), arrOutActors);
+	for (int i = 0; i < arrOutActors.Num(); ++i)
+	{
+		AStageManager* SM = Cast<AStageManager>(arrOutActors[i]);
+		if (SM)
+		{
+			UE_LOG(LogTemp, Log, TEXT("EnemyBase :: AddEnemy AStageManager")); 
+			SM->AddEnemy(this);
+			//SM->AddEnemy(this);
+		}
 	}
 }
 

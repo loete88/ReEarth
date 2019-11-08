@@ -3,6 +3,7 @@
 #include "StageManager.h"
 #include "Kismet\KismetSystemLibrary.h"
 #include "MovieScene\Public\MovieSceneSequencePlayer.h"
+#include "Enemy/Character/EnemyBase.h"
 #include "TimeManagement\Public\TimeManagementBlueprintLibrary.h"
 
 // Sets default values
@@ -73,6 +74,7 @@ void AStageManager::AddEnemy(AEnemyBase * enemy)
 {
 	if (nullptr != enemy)
 	{
+		UE_LOG(LogTemp, Log, TEXT("AStageManager :: AddEnemy"));
 		EnemyArray.Add(enemy);
 	}
 }
