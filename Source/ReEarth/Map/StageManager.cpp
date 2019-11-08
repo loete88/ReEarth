@@ -17,41 +17,21 @@ void AStageManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	int a = 0;
-	int b = 0;
-
-	for (auto ind : StageIndex)
+	for (int i = 0; i < StageIndex.Num(); i++)
 	{
-		for (auto seq : ind.sequenceInfo)
+		for (int j = 0; j < StageIndex[i].sequenceInfo.Num(); j++)
 		{
-			if (seq.LevelSequence != nullptr)
+			if (StageIndex[i].sequenceInfo[j].LevelSequence != nullptr)
 			{
-				FMovieSceneSequencePlaybackSettings set;
 				ALevelSequenceActor* dummyActor;
-
-				ULevelSequencePlayer * t = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(),
-					seq.LevelSequence, FMovieSceneSequencePlaybackSettings(), dummyActor);
-
-				StageIndex[0].sequenceInfo[0].LevelSequencePlayer = t;
-
-				/*seq.LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+				StageIndex[i].sequenceInfo[j].LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
 					GetWorld(),
-					seq.LevelSequence,
-					set,
+					StageIndex[i].sequenceInfo[j].LevelSequence,
+					FMovieSceneSequencePlaybackSettings(),
 					dummyActor
-				);*/
-				
-				//if(seq.LevelSequencePlayer)
-				//	UE_LOG(LogTemp, Warning, TEXT("eeeeeeeee"));
-				b++;
+				);
 			}
 		}
-		a++;
-	}
-
-	if (StageIndex[0].sequenceInfo[0].LevelSequencePlayer)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ss"));
 	}
 }
 
@@ -60,34 +40,26 @@ void AStageManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//UE_LOG(LogTemp, Warning, TEXT("ss"));
 	FLatentActionInfo latenInfo;
 	UKismetSystemLibrary::Delay(this, 2, latenInfo);
 
-	for (auto ind : StageIndex)
+	for (int i = 0; i < StageIndex.Num(); i++)
 	{
-		if (ind.isUse)
+		if (StageIndex[i].isUse)
 		{
-			if (ind.sequenceInfo[ind.Wave].LevelSequencePlayer == nullptr)
+			if (!StageIndex[i].sequenceInfo[StageIndex[i].Wave].isPlay)
 			{
-				int a = ind.Wave;
-				UE_LOG(LogTemp, Warning, TEXT("%d"), a);
+				StageIndex[i].sequenceInfo[StageIndex[i].Wave].isPlay = true;
+				StageIndex[i].sequenceInfo[StageIndex[i].Wave].LevelSequencePlayer->Play();
 			}
-			//else
-			//{
-			//	UE_LOG(LogTemp, Warning, TEXT("Really"));
-			//}
-			//ind.sequenceInfo[ind.Wave].isPlay = true; //이거 끝까지 안쓰면 지우기
-			//ind.sequenceInfo[ind.Wave].LevelSequencePlayer->Play();
-			//float currentTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(ind.sequenceInfo[ind.Wave].LevelSequencePlayer->GetCurrentTime());
-			//float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(ind.sequenceInfo[ind.Wave].LevelSequencePlayer->GetEndTime());
-			//if (currentTime == endTime)
-			//{
-			//	if (ind.Wave == ind.sequenceInfo.Max())
-			//	{
-			//		ind.isUse = false;
-			//	}
-			//	ind.Wave++;
-			//}
+			float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(StageIndex[i].sequenceInfo[StageIndex[i].Wave].LevelSequencePlayer->GetEndTime());
+			UKismetSystemLibrary::Delay(this, endTime, latenInfo);
+			StageIndex[i].Wave++;
+			if (StageIndex[i].Wave == StageIndex[i].sequenceInfo.Num())
+			{
+				StageIndex[i].isUse = false;
+			}
 		}
 	}
 }
@@ -95,4 +67,12 @@ void AStageManager::Tick(float DeltaTime)
 void AStageManager::SetterUse(int num)
 {
 	StageIndex[num].isUse = true;
+}
+
+void AStageManager::AddEnemy(AEnemyBase * enemy)
+{
+	if (nullptr != enemy)
+	{
+		EnemyArray.Add(enemy);
+	}
 }
