@@ -14,6 +14,9 @@
 
 AEnemyType1::AEnemyType1()
 {
+	MaxHP = 100.0f;
+	CurrentHP = MaxHP;
+
 	//--------------------------------------------
 	GetCapsuleComponent()->SetCapsuleHalfHeight(280);
 	GetCapsuleComponent()->SetCapsuleRadius(180);
@@ -73,16 +76,13 @@ float AEnemyType1::GetAttackTargetRot()
 //------------------------------------------------------------------------------------
 void AEnemyType1::AttackStart_Implementation()
 {
-	MaxHP = 100.0f;
-	CurrentHP = MaxHP;
-
 	CheckAttackStart = !CheckAttackStart;
 	if (CheckAttackStart)
 	{
 		FTransform SocketT = Weapon->GetSocketTransform(TEXT("WeaponSocket"));
 		FRotator Rot = Weapon->GetSocketRotation(TEXT("WeaponSocket"));
 		FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
-		FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
+		FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(3.0f, 3.0f, 3.0f));
 		
 		GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
 	}

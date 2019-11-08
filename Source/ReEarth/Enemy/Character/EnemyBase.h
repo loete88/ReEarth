@@ -52,7 +52,7 @@ public:
 	bool IsDead = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool EnableMove = false;
+	bool EnableMove = true;
 	   
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsVisibleAttackTarget = false;
