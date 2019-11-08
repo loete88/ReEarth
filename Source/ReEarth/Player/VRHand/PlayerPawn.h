@@ -67,7 +67,7 @@ public:
 
 	//Robot
 	//------------------------------------------
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class APlayerRobot * pRobot;
 
 	UPROPERTY(EditAnywhere, Category = "Robot")
@@ -155,8 +155,4 @@ private:
 	class ACanDropActor * pLeftDropActor;
 	class ACanDropActor * pRightDropActor;
 	//----------------------------------------------------
-
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-
 };

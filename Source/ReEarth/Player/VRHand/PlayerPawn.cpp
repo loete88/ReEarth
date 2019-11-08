@@ -19,8 +19,8 @@
 #include "Components/InputComponent.h"
 #include "Player/RemoteController/RemoteController.h"
 #include "Game/ReEarth_PC.h"
-#include "UnrealNetwork.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
+
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -346,11 +346,3 @@ ACanDropActor* APlayerPawn::GetActorNearHand(bool bIsLeft)
 
 	return (ACanDropActor*)pNearestActor;
 }
-
-void APlayerPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(APlayerPawn, pRobot);
-}
-

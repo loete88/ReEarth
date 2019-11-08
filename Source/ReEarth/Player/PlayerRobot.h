@@ -129,29 +129,44 @@ public:
 	//---------------------------------------------------
 	//체력 관련 멤버 변수
 
+
+	//시야 관련 멤버 변수
+	//---------------------------------------------------
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sight")
+	float sightRadius = 60.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sight")
+	float sightDistance = 600.0f;
+	//---------------------------------------------------
+	//시야 관련 멤버 변수
+
+
 	//Bullet으로 사용할 blueprint 가져오기
 	//---------------------------------------------------
 	UPROPERTY(EditAnywhere, Category = "Bullet")
 	TSubclassOf<class APlayerBullet> Bullet_Template;
 	//---------------------------------------------------
 
-	//Homing으로 사용할 blueprint 가져오기
+
+	//Sound
 	//---------------------------------------------------
+	//Homing으로 사용할 blueprint 가져오기
 	UPROPERTY(EditAnywhere, Category = "Bullet")
 	TSubclassOf<class APlayerHoming> Homing_Template;
-	//---------------------------------------------------
 	
 	//Fire sound로 사용할 SoundCue 가져오기
-	//---------------------------------------------------
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	class USoundBase * FireSound;
-	//---------------------------------------------------
 
 	//Homing Ready sound로 사용할 SoundCue 가져오기
-	//---------------------------------------------------
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	class USoundBase * ReadyHomingSound;
+
+	//Robot이 움직이는게 가능할 때 Sound로 사용할 SoundCue 가져오기
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	class USoundBase * RobotOnSound;
 	//---------------------------------------------------
+	//Sound
 
 	//Controller로 사용할 blueprint 가져오기
 	//---------------------------------------------------
@@ -224,6 +239,9 @@ public:
 	//HomingShot
 	void HomingShot();
 
+	// 시야 판정 함수.
+	bool IsEnemyInSight(AEnemyBase* targetEnemy);
+
 	//Vr없을 때 테스트할 수 있도록 만든 함수
 	void LockOff();
 	//---------------------------------------------------
@@ -241,6 +259,12 @@ public:
 	//---------------------------------------------
 	void AddEnemy(AEnemyBase * pNewEnemey);
 	void RemoveEnemy(AEnemyBase * pRemoveEnemy);
+	//---------------------------------------------
+
+
+	//RobotOn Sound Play함수
+	//---------------------------------------------
+	void RobotOnSoundPlay();
 	//---------------------------------------------
 
 

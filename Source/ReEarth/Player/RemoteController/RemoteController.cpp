@@ -51,6 +51,7 @@ void ARemoteController::Pickup(USceneComponent * AttachTo)
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld, false), TEXT("LeftRemotePosition"));
 		pPlayer->pRobot->LeftAttackState = EHandState::Attackable;
+		pPlayer->pRobot->RobotOnSoundPlay();
 	}
 	else
 	{
@@ -59,6 +60,7 @@ void ARemoteController::Pickup(USceneComponent * AttachTo)
 			EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld, false), TEXT("RightRemotePosition"));
 		pPlayer->pRobot->RightAttackState = EHandState::Attackable;
+		pPlayer->pRobot->RobotOnSoundPlay();
 	}
 
 }

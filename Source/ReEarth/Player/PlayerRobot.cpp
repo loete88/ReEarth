@@ -28,6 +28,7 @@
 #include "Game/ReEarth_GM.h"
 #include "LevelSequence/Public/LevelSequencePlayer.h"
 #include "MovieScene/Public/MovieSceneSequencePlayer.h"
+#include "DrawDebugHelpers.h"
 
 
 //기본 공격 발사 주기(초단위)
@@ -212,7 +213,8 @@ void APlayerRobot::ViewYaw(float Value)
 	{
 		if (RobotState == ERobotState::Normal)
 		{
-			SetActorRotation(FRotator(0.0f, GetActorRotation().Yaw + Value, 0.0f));
+			AddActorLocalRotation(FRotator(0.0f, Value, 0.0f));
+			//SetActorRotation(FRotator(0.0f, GetActorRotation().Yaw + Value, 0.0f));
 		}
 	}
 }
@@ -287,18 +289,109 @@ void APlayerRobot::HomingShot()
 			break;
 		}
 
-		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
-		float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
-		
-		//4. 미사일 허용 범위안에 들어오고
-		//현재 카메라에 보이는 상태면 TargetArray에 추가
-		if (fDistance < MinHitDist && WasRecentlyRendered(0.0f))
+
+
+		//선생님이 해주신 부분-------------------------------
+		//선생님이 해주신 부분-------------------------------
+		//선생님이 해주신 부분-------------------------------
+		//시야 판정.
+		if (IsEnemyInSight(EnemyArray[iCnt]) == true)
 		{
 			TargetArray.Add(EnemyArray[iCnt]);
 
 			//5. 미사일 개수 갱신
 			--CurrentHomingNum;
 		}
+		//선생님이 해주신 부분-------------------------------
+		//선생님이 해주신 부분-------------------------------
+		//선생님이 해주신 부분-------------------------------
+
+
+		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
+		//float fDistance = GetSquaredDistanceTo(EnemyArray[iCnt]);
+		//UE_LOG(LogClass, Warning, TEXT("<Distance: %f> / <sightDistance2: %f>"), fDistance, sightDistance * sightDistance);
+		
+		//if (fDistance <= MinHitDist)
+		//{
+		//	/*
+		//	//FVector enemyLocation = EnemyArray[iCnt]->GetActorLocation();
+		//	//FVector fromMe2EnemyVector = enemyLocation - GetActorLocation();
+		//	//fromMe2EnemyVector.Normalize();
+
+		//	//// Debugging.
+		//	////DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 50000.0f, FColor::Red, false, 2.0f);
+
+		//	//float dot = GetActorForwardVector().X * fromMe2EnemyVector.X + GetActorForwardVector().Y * fromMe2EnemyVector.Y + GetActorForwardVector().Z * fromMe2EnemyVector.Z;
+		//	//float angle = FMath::Abs(FMath::RadiansToDegrees(FMath::Acos(dot)));
+
+		//	//// 각도 확인.
+		//	//if (angle <= sightRadius * 0.5f)
+		//	//{
+		//	//	// Ray 발사 후 앞에 물체 있는지 확인.
+		//	//	FHitResult OutResult;
+		//	//	FCollisionObjectQueryParams QueryParams = FCollisionObjectQueryParams::AllStaticObjects;
+		//	//	bool bIsHit = GetWorld()->LineTraceSingleByObjectType(OutResult, GetActorLocation(), enemyLocation, QueryParams);
+
+		//	//	// 시야 각도 안에 있을 때는 가리는 물체가 있는지 한번 더 확인.
+		//	//	if (bIsHit)
+		//	//	{
+		//	//		UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
+		//	//		UE_LOG(LogClass, Warning, TEXT("HitResult: %s <HitActorName: %s>"), TEXT("Hit"), *OutResult.Actor->GetName());
+		//	//	}
+
+		//	//	// 가리는 물체가 없을 때 시야 안데 들어왔다고 판정.
+		//	//	else
+		//	//	{
+		//	//		TargetArray.Add(EnemyArray[iCnt]);
+
+		//	//		//5. 미사일 개수 갱신
+		//	//		--CurrentHomingNum;
+
+		//	//		UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
+		//	//	}
+		//	//}
+
+		//	//// 각도 벗어남.
+		//	//else
+		//	//{
+		//	//	UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("false"), angle);
+		//	//}*/
+		//}
+
+		///*if (fDistance <= sightDistance * sightDistance)
+		//{
+		//	FVector enemyLocation = EnemyArray[iCnt]->GetActorLocation();
+		//	FVector fromMe2EnemyVector = enemyLocation - GetActorLocation();
+		//	float angle = FMath::Atan2(fromMe2EnemyVector.Y, fromMe2EnemyVector.X);
+
+		//	if (angle <= sightRadius * 0.5f)
+		//	{
+		//		UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), "true", angle);
+		//	}
+		//	else
+		//	{
+		//		UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), "false", angle);
+		//	}
+		//}*/
+
+		//if (EnemyArray[iCnt]->WasRecentlyRendered(0.0f))
+		//{
+		//	UE_LOG(LogClass, Warning, TEXT("true"));
+		//}
+		//else
+		//{
+		//	UE_LOG(LogClass, Warning, TEXT("false"));
+		//}
+
+		//4. 미사일 허용 범위안에 들어오고
+		//현재 카메라에 보이는 상태면 TargetArray에 추가
+		//if (fDistance < MinHitDist && EnemyArray[iCnt]->WasRecentlyRendered(0.0f))
+		//{
+		//	TargetArray.Add(EnemyArray[iCnt]);
+
+		//	//5. 미사일 개수 갱신
+		//	--CurrentHomingNum;
+		//}
 	}
 	//--------------------------------------------------
 	//TargetArray Setting
@@ -371,6 +464,59 @@ void APlayerRobot::HomingShot()
 	//필요한 & 사용한 변수들 갱신
 }
 
+bool APlayerRobot::IsEnemyInSight(AEnemyBase* targetEnemy)
+{
+	//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
+	float fDistance = GetSquaredDistanceTo(targetEnemy);
+	//UE_LOG(LogClass, Warning, TEXT("<Distance: %f> / <sightDistance2: %f>"), fDistance, sightDistance * sightDistance);
+
+	if (fDistance <= MinHitDist)
+	{
+		FVector enemyLocation = targetEnemy->GetActorLocation();
+		FVector fromMe2EnemyVector = enemyLocation - GetActorLocation();
+		fromMe2EnemyVector.Normalize();
+
+		// Debugging.
+		//DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 50000.0f, FColor::Red, false, 2.0f);
+
+		float dot = GetActorForwardVector().X * fromMe2EnemyVector.X + GetActorForwardVector().Y * fromMe2EnemyVector.Y + GetActorForwardVector().Z * fromMe2EnemyVector.Z;
+		float angle = FMath::Abs(FMath::RadiansToDegrees(FMath::Acos(dot)));
+
+		// 각도 확인.
+		if (angle <= sightRadius * 0.5f)
+		{
+			// Ray 발사 후 앞에 물체 있는지 확인.
+			FHitResult OutResult;
+			FCollisionObjectQueryParams QueryParams = FCollisionObjectQueryParams::AllStaticObjects;
+			bool bIsHit = GetWorld()->LineTraceSingleByObjectType(OutResult, GetActorLocation(), enemyLocation, QueryParams);
+
+			// 시야 각도 안에 있을 때는 가리는 물체가 있는지 한번 더 확인.
+			if (bIsHit)
+			{
+				UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
+				UE_LOG(LogClass, Warning, TEXT("HitResult: %s <HitActorName: %s>"), TEXT("Hit"), *OutResult.Actor->GetName());
+
+				return false;
+			}
+
+			// 가리는 물체가 없을 때 시야 안데 들어왔다고 판정.
+			else
+			{
+				UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
+				return true;
+			}
+		}
+
+		// 각도 벗어남.
+		else
+		{
+			UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("false"), angle);
+		}
+	}
+
+	return false;
+}
+
 
 void APlayerRobot::LockOff()
 {
@@ -438,6 +584,14 @@ void APlayerRobot::RemoveEnemy(AEnemyBase * pRemoveEnemy)
 	if (nullptr != pRemoveEnemy)
 	{
 		EnemyArray.Remove(pRemoveEnemy);
+	}
+}
+
+void APlayerRobot::RobotOnSoundPlay()
+{
+	if (RobotOnSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), RobotOnSound, GetActorLocation());
 	}
 }
 
