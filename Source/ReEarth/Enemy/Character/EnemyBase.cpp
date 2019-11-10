@@ -12,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Map/StageManager.h"
 
 //------------------------------------------------------------------------------------
@@ -23,6 +24,13 @@ AEnemyBase::AEnemyBase()
 
 	HomingPosition = CreateDefaultSubobject<USceneComponent>(TEXT("HomingPosition"));
 	HomingPosition->SetupAttachment(GetMesh());
+
+	HomingWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HomingUI"));
+	HomingWidget->SetupAttachment(HomingPosition);
+	HomingWidget->SetRelativeLocation(FVector(0, 100, 0));
+	HomingWidget->SetRelativeRotation(FRotator(0, -90, 0));
+	HomingWidget->SetWorldScale3D(FVector(0.2f, 0.2f, 0.2f));
+	//HomingWidget->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;

@@ -60,6 +60,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USceneComponent * HomingPosition;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UWidgetComponent * HomingWidget;
+
 	//------------------------------------------------------------------------------------
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(EEnemyState NewState);
