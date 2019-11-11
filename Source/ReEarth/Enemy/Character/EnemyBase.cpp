@@ -32,6 +32,7 @@ AEnemyBase::AEnemyBase()
 	HomingWidget->SetupAttachment(RootComponent);
 	HomingWidget->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	HomingWidget->SetVisibility(false);
+	HomingWidget->SetDrawSize(FVector2D(700.0f, 700.0f));
 	//HomingWidget->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
 	AIControllerClass = AEnemyAIController::StaticClass();
