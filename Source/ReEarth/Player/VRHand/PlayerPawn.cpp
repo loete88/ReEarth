@@ -97,6 +97,8 @@ void APlayerPawn::BeginPlay()
 
 	pRobot = GetWorld()->SpawnActor<APlayerRobot>(Robot_Template, GetActorTransform());
 
+
+
 	AttachToComponent(pRobot->GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld,
@@ -104,6 +106,8 @@ void APlayerPawn::BeginPlay()
 			false),
 		TEXT("PlayerPosition"));
 	//--------------------------
+
+	VRReset();
 
 	//--------------------------------------------------------------------------------
 	
