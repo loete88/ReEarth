@@ -113,7 +113,7 @@ void APlayerHoming::HomingTrail()
 
 void APlayerHoming::SendDamage(AActor * OtherActor)
 {
-	UGameplayStatics::ApplyDamage(OtherActor, 100.0f,
+	UGameplayStatics::ApplyDamage(OtherActor, 0.0f,
 		UGameplayStatics::GetPlayerController(GetWorld(), 0), OtherActor, NULL);
 }
 

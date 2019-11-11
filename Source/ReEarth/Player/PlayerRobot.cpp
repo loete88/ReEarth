@@ -405,61 +405,38 @@ void APlayerRobot::HomingShot()
 
 	for (int iCnt = 0; iCnt < iLen; ++iCnt)
 	{
-		////2. HomingAim 생성
-		//	//2-1 HomingPosition 가져오기(미사일 맞을 위치)
-		USceneComponent * HomingPosition = TargetArray[iCnt]->HomingPosition;
-		FVector ActorHitPosition = HomingPosition->GetComponentLocation();
-		//
-		//	//2-2 Aim이 Player를 바라보는 Rotator 가져오기
-		FRotator LookPlayerRotation = UKismetMathLibrary::FindLookAtRotation(ActorHitPosition, GetActorLocation());
-		//
-		//	//2-3 Aim을 Transform 생성
-		////위치는 HomingPosition + Aim이 Player를 바라보는 Forward Vector
-		FVector AimLocation = ActorHitPosition + UKismetMathLibrary::GetForwardVector(LookPlayerRotation) * 300;
-		////각도는 Aim이 Player를 바라보도록 그냥 LookPlayerRotation
-		FTransform AimTransform = UKismetMathLibrary::MakeTransform(AimLocation, LookPlayerRotation,FVector(1.0f,1.0f,1.0f));
-
-		//	//2-4 HomingAim Spawn
-		AHomingAim * pHomingAim = GetWorld()->SpawnActor<AHomingAim>(HomingAim_Template, AimLocation, LookPlayerRotation);
-
-		////3. HomingAimArray에 넣고 나중에 한번에 소멸시킨다.
-		HomingAimArray.Add(pHomingAim);
-
-
-		////4. 미사일 Detach
+		//1-1. 미사일 Detach
 		HomingArray[0]->GetRootComponent()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 
-		//5. Play Sound
+		//1-2. Play Sound
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReadyHomingSound, GetActorLocation());
 
-		//6. 미사일에게 Shot명령
+		//1-3. 미사일에게 Shot명령
 		HomingArray[0]->Shot(TargetArray[iCnt]);
 
-		//7. 발사한 미사일 HomingArray에서 제거
+		//1-4. 발사한 미사일 HomingArray에서 제거
 		APlayerHoming * pTargetHoming = HomingArray[0];
 		HomingArray.Remove(pTargetHoming);
 
-		//8. UI상 Missile 갯수 줄이기
+		//1-5. UI상 Missile 갯수 줄이기
 		MainUIUMG->UpdateRemoveMissile();
 
-		//9. Homing Spawn Timer Handle 작동
-		GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
-		UpdateHomingCoolTime();
+
+		TargetArray[iCnt]->HomingOn();
 	}
 	//---------------------------------------------------
 	//Homing Setting
 
-	
+
 
 	//필요한 & 사용한 변수들 갱신
 	//----------------------------------------------------
-	HomingTimeCheck = UGameplayStatics::GetTimeSeconds(GetWorld());
+	//Homing Spawn Timer Handle 작동
+	GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
+	UpdateHomingCoolTime();
 
 	//TargetArray클리어
 	TargetArray.Empty();
-
-	//Homing Aim을 보여주기위한 약간의 Delay
-	GetWorldTimerManager().SetTimer(ClearTargetArrayTimerHandle, this, &APlayerRobot::ClearTargetArray, 1.5f, false);
 	//----------------------------------------------------
 	//필요한 & 사용한 변수들 갱신
 }
@@ -493,8 +470,8 @@ bool APlayerRobot::IsEnemyInSight(AEnemyBase* targetEnemy)
 			// 시야 각도 안에 있을 때는 가리는 물체가 있는지 한번 더 확인.
 			if (bIsHit)
 			{
-				UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
-				UE_LOG(LogClass, Warning, TEXT("HitResult: %s <HitActorName: %s>"), TEXT("Hit"), *OutResult.Actor->GetName());
+				/*UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
+				UE_LOG(LogClass, Warning, TEXT("HitResult: %s <HitActorName: %s>"), TEXT("Hit"), *OutResult.Actor->GetName());*/
 
 				return false;
 			}
@@ -502,7 +479,7 @@ bool APlayerRobot::IsEnemyInSight(AEnemyBase* targetEnemy)
 			// 가리는 물체가 없을 때 시야 안데 들어왔다고 판정.
 			else
 			{
-				UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
+				//UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("true"), angle);
 				return true;
 			}
 		}
@@ -510,7 +487,7 @@ bool APlayerRobot::IsEnemyInSight(AEnemyBase* targetEnemy)
 		// 각도 벗어남.
 		else
 		{
-			UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("false"), angle);
+			//UE_LOG(LogClass, Warning, TEXT("<result: %s> / <angle: %f>"), TEXT("false"), angle);
 		}
 	}
 
@@ -593,18 +570,6 @@ void APlayerRobot::RobotOnSoundPlay()
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), RobotOnSound, GetActorLocation());
 	}
-}
-
-void APlayerRobot::ClearTargetArray()
-{
-	int iLen = HomingAimArray.Num();
-
-	for (int iCnt = 0; iCnt < iLen; ++iCnt)
-	{
-		HomingAimArray[iCnt]->K2_DestroyActor();
-	}
-
-	HomingAimArray.Empty();
 }
 
 
