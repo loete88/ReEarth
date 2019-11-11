@@ -572,6 +572,10 @@ void APlayerRobot::RobotOnSoundPlay()
 	}
 }
 
+void APlayerRobot::RobotInit()
+{
+}
+
 
 void APlayerRobot::LeftShotCallBack()
 {

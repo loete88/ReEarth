@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
+#include "Player/PlayerRobot.h"
+#include "Player/VRHand/PlayerPawn.h"
 #include "Engine/Classes/Kismet/StereoLayerFunctionLibrary.h"
 
 void AReEarth_GM::BeginPlay()
@@ -19,7 +21,10 @@ void AReEarth_GM::BeginPlay()
 
 void AReEarth_GM::GameStart()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMap"));
+	APlayerPawn * Player = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
+	APlayerRobot * PlayerRobot = Player->pRobot;
+	PlayerRobot->SetActorLocation(FVector(7450.0f, -21800.0f, 200.0f));
+	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMap"));
 }
 
 void AReEarth_GM::GameExit()
@@ -31,5 +36,8 @@ void AReEarth_GM::GameExit()
 
 void AReEarth_GM::GoToLobby()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestStart"));
+	APlayerPawn * Player = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
+	APlayerRobot * PlayerRobot = Player->pRobot;
+	PlayerRobot->SetActorLocation(FVector(10900.0f, -47757.0f, 942.0f));
+	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestStart"));
 }

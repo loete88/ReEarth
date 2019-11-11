@@ -57,6 +57,7 @@ void AStartActor::DoActorBeginOverlap(UPrimitiveComponent * OverlappedComp, AAct
 {
 	UE_LOG(LogClass, Warning, TEXT("Overlap"));
 	AReEarth_GM * GM = Cast<AReEarth_GM>(UGameplayStatics::GetGameMode(GetWorld()));
+
 	GM->GameStart();
 }
 

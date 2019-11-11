@@ -267,6 +267,9 @@ public:
 	void RobotOnSoundPlay();
 	//---------------------------------------------
 
+	//RobotInit
+	void RobotInit();
+
 
 private:
 	//√— πﬂªÁΩ√ ≈“¿ª ¡÷±‚¿ß«— Handle---------------
@@ -372,4 +375,7 @@ private:
 	//GoToLobby
 	void GoToLobby();
 	//---------------------------------------------
+
+
+
 };
