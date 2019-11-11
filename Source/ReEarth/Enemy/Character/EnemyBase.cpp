@@ -8,12 +8,15 @@
 #include "Components/SceneComponent.h"
 #include "Enemy/Destination.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Enemy/AI/EnemyAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Map/StageManager.h"
+#include "Player/UI/Aim/HomingAimWidgetBase.h"
+#include "TimerManager.h"
 
 //------------------------------------------------------------------------------------
 AEnemyBase::AEnemyBase()
@@ -26,10 +29,9 @@ AEnemyBase::AEnemyBase()
 	HomingPosition->SetupAttachment(GetMesh());
 
 	HomingWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HomingUI"));
-	HomingWidget->SetupAttachment(HomingPosition);
-	HomingWidget->SetRelativeLocation(FVector(0, 100, 0));
-	HomingWidget->SetRelativeRotation(FRotator(0, -90, 0));
-	HomingWidget->SetWorldScale3D(FVector(0.2f, 0.2f, 0.2f));
+	HomingWidget->SetupAttachment(RootComponent);
+	HomingWidget->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+	HomingWidget->SetVisibility(false);
 	//HomingWidget->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
 	AIControllerClass = AEnemyAIController::StaticClass();
@@ -85,6 +87,24 @@ void AEnemyBase::Tick(float DeltaTime)
 			IsVisibleAttackTarget = false;
 		}
 	}
+
+
+	//Homing Widget이 보이는 상태일 때만 플레이어를 바라보도록
+	//Aim을 회전시키자.
+	if (HomingWidget->IsVisible())
+	{
+		//원점에 가져다 놓고
+		HomingWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
+		//플레이어를 바라봐야하는 각도 구하기
+		FRotator LookRotator = UKismetMathLibrary::FindLookAtRotation(HomingWidget->GetComponentLocation(), AttackTarget->GetActorLocation());
+
+		//Aim회전
+		HomingWidget->SetWorldRotation(LookRotator);
+		//앞으로 보내기
+		HomingWidget->SetWorldLocation(HomingWidget->GetComponentLocation()+HomingWidget->GetForwardVector() * 400);
+	}
+
 }
 
 //------------------------------------------------------------------------------------
@@ -184,3 +204,21 @@ void AEnemyBase::DeadEnd_Implementation(){ }
 //void AEnemyBase::MoveDestinationTarget_Implementation(AActor* Target) { }
 
 void AEnemyBase::RotateAttactTargetLoc_Implementation() { }
+
+void AEnemyBase::HomingOn()
+{
+	//1. Widget 가시화
+	HomingWidget->SetVisibility(true);
+
+	//2. Widget Animation Play
+	UHomingAimWidgetBase * HomingAimWidget = Cast<UHomingAimWidgetBase>(HomingWidget->GetUserWidgetObject());
+	HomingAimWidget->PlayWidgetAnimataion();
+
+	GetWorldTimerManager().SetTimer(HomingOffHandle, this, &AEnemyBase::HomingOff, 1.5f,false);
+
+}
+
+void AEnemyBase::HomingOff()
+{
+	HomingWidget->SetVisibility(false);
+}

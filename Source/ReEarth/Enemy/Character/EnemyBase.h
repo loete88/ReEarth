@@ -108,5 +108,18 @@ public:
 	void RotateAttactTargetLoc();
 	virtual void RotateAttactTargetLoc_Implementation();
 	
+
+
+	//HomingOn함수
+	//Player로부터 유도미사일 Target으로 지정됐을 때 해야할 작업
+	void HomingOn();
+	//--------------------------------------------------------
+	
+	void HomingOff();
+
+	FTimerHandle HomingOffHandle;
+
+
+
 	//------------------------------------------------------------------------------------
 };
