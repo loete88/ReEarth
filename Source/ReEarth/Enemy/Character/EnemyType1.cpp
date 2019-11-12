@@ -22,7 +22,7 @@ AEnemyType1::AEnemyType1()
 	GetCapsuleComponent()->SetCapsuleRadius(180);
 	
 	//--------------------------------------------
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -280));
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -260));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	GetMesh()->SetWorldScale3D(FVector(2.8f, 2.8f, 2.8f));
 	   
