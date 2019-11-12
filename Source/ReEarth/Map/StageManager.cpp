@@ -5,6 +5,8 @@
 #include "MovieScene\Public\MovieSceneSequencePlayer.h"
 #include "Enemy/Character/EnemyBase.h"
 #include "TimeManagement\Public\TimeManagementBlueprintLibrary.h"
+#include "TimerManager.h"
+#include "Map\StageBarrier.h"
 
 // Sets default values
 AStageManager::AStageManager()
@@ -40,34 +42,6 @@ void AStageManager::BeginPlay()
 void AStageManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//UE_LOG(LogTemp, Warning, TEXT("ss"));
-	FLatentActionInfo latenInfo;
-	UKismetSystemLibrary::Delay(this, 2, latenInfo);
-
-	for (int i = 0; i < StageIndex.Num(); i++)
-	{
-		if (StageIndex[i].isUse)
-		{
-			if (!StageIndex[i].sequenceInfo[StageIndex[i].Wave].isPlay)
-			{
-				StageIndex[i].sequenceInfo[StageIndex[i].Wave].isPlay = true;
-				StageIndex[i].sequenceInfo[StageIndex[i].Wave].LevelSequencePlayer->Play();
-			}
-			float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(StageIndex[i].sequenceInfo[StageIndex[i].Wave].LevelSequencePlayer->GetEndTime());
-			UKismetSystemLibrary::Delay(this, endTime, latenInfo);
-			StageIndex[i].Wave++;
-			if (StageIndex[i].Wave == StageIndex[i].sequenceInfo.Num())
-			{
-				StageIndex[i].isUse = false;
-			}
-		}
-	}
-}
-
-void AStageManager::SetterUse(int num)
-{
-	StageIndex[num].isUse = true;
 }
 
 void AStageManager::AddEnemy(AEnemyBase * enemy)
@@ -77,4 +51,69 @@ void AStageManager::AddEnemy(AEnemyBase * enemy)
 		UE_LOG(LogTemp, Log, TEXT("AStageManager :: AddEnemy"));
 		EnemyArray.Add(enemy);
 	}
+}
+
+void AStageManager::StartStage(int num)
+{
+	UE_LOG(LogTemp, Log, TEXT("AStageManager :: StartStage"));
+
+	CurrentStage = num;
+
+	SpawnedBarrier = GetWorld()->SpawnActor<AActor>(StageIndex[CurrentStage].Barrier, StageIndex[CurrentStage].BarrierTransform);
+	Cast<AStageBarrier>(SpawnedBarrier)->BarrierSize = StageIndex[CurrentStage].BarrierSize;
+	Cast<AStageBarrier>(SpawnedBarrier)->CreateBarrier();
+
+	if (Wave == 0)
+	{
+		for (int i = 0; i < EnemyArray.Num(); i++)
+		{
+			Destroy(EnemyArray[i]);
+		}
+	}
+
+	if (!StageIndex[CurrentStage].sequenceInfo[Wave].isPlay)
+	{
+		StageIndex[CurrentStage].sequenceInfo[Wave].isPlay = true;
+		StageIndex[CurrentStage].sequenceInfo[Wave].LevelSequencePlayer->Play();
+	}
+
+	float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(StageIndex[CurrentStage].sequenceInfo[Wave].LevelSequencePlayer->GetEndTime());
+	GetWorldTimerManager().SetTimer(SequenceEndTimerHandle, this, &AStageManager::PlayStage, endTime, false);
+}
+
+void AStageManager::PlayStage()
+{
+	UE_LOG(LogTemp, Log, TEXT("AStageManager :: PlayStage"));
+
+	bool EnemyStillAlive = false;
+	for (int i = 0; i < EnemyArray.Num(); i++)
+	{
+		if (!EnemyArray[i]->IsDead)
+		{
+			EnemyStillAlive = true;
+			break;
+		}
+	}
+
+	if (!EnemyStillAlive)
+	{
+		Wave++;
+		//Check Remain Stage
+		if (Wave == StageIndex[CurrentStage].sequenceInfo.Num())
+			EndStage();
+		else
+			StartStage(CurrentStage);
+	}
+	else
+		GetWorldTimerManager().SetTimer(CheckAliveEnemyHandle, this, &AStageManager::PlayStage, 2, false);
+}
+
+void AStageManager::EndStage()
+{
+	UE_LOG(LogTemp, Log, TEXT("AStageManager :: EndStage"));
+
+	StageIndex[CurrentStage].isUse = true;	
+	Cast<AStageBarrier>(SpawnedBarrier)->SelfDestroy();
+	Wave = 0;
+	CurrentStage = 0;
 }

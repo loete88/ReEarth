@@ -14,9 +14,14 @@ struct FStageStruct
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FSequenceInfoStruct> sequenceInfo;
-
-
-
 	bool isUse = false;
-	int Wave = 0;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<AActor> Barrier;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	FTransform BarrierTransform;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	int BarrierSize;
 };
