@@ -73,9 +73,6 @@ void APlayerBullet::DoActorBeginOverlap(class UPrimitiveComponent* OverlappedCom
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	FString test(OtherComp->GetName());
-	UE_LOG(LogClass, Warning, TEXT("%s"), *test);
-
 	//여기에 들어가야하는 것
 	//Enemy클래스로 형변환해서 성공하면 SpawnEmitterAt location 호출한다.
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, UKismetMathLibrary::MakeTransform(GetActorLocation(), FRotator(), FVector(4.0f)));

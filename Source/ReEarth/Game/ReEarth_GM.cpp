@@ -39,6 +39,9 @@ void AReEarth_GM::GoToLobby()
 {
 	APlayerPawn * Player = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
 	APlayerRobot * PlayerRobot = Player->pRobot;
-	PlayerRobot->SetActorLocation(FVector(10900.0f, -47757.0f, 942.0f));
+
+
+	PlayerRobot->SetActorLocation(FVector(94840.000000, -19607.250000f, 1122.021729f));
+	PlayerRobot->RobotInit();
 	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestStart"));
 }
