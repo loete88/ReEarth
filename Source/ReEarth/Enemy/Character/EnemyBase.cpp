@@ -145,6 +145,14 @@ void AEnemyBase::AddEnemy()
 	}
 }
 
+void AEnemyBase::RemoveEnemy()
+{
+	if (AttackTarget)
+	{
+		AttackTarget->pRobot->RemoveEnemy(this);
+	}
+}
+
 //------------------------------------------------------------------------------------
 void AEnemyBase::ChangeState(EEnemyState NewState)
 {
@@ -188,6 +196,13 @@ bool AEnemyBase::GetVisibleAttackTarget()
 
 float AEnemyBase::GetAttackTargetRot()
 {
+	return 0.0f;
+}
+
+float AEnemyBase::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogTemp, Log, TEXT("EnemyBase :: TakeDamage"));
 	return 0.0f;
 }
 

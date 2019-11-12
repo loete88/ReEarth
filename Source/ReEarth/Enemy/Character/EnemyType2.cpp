@@ -90,6 +90,46 @@ AEnemyType2::AEnemyType2()
 	{
 		SK_CSC_2->SetSkeletalMesh(SK_CSC_2_Asset.Object);
 	}
+
+	static ConstructorHelpers::FObjectFinder<UPhysicsAsset>PhysicsMeshAsset(
+		TEXT("/Game/AssetContents/CSC/Meshes/CSC_Base1_PhysicsAsset_Dead.CSC_Base1_PhysicsAsset_Dead"));
+	if (PhysicsMeshAsset.Object)
+	{
+		MeshPhsicsDeadAsset = PhysicsMeshAsset.Object;
+	}
+}
+
+float AEnemyType2::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	CurrentHP -= DamageAmount;
+	UE_LOG(LogTemp, Log, TEXT("AEnemyType2 :: TakeDamage %f"), &CurrentHP);
+
+	if (CurrentHP <= 0)
+	{
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel2, ECollisionResponse::ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Ignore);
+
+		if (MeshPhsicsDeadAsset)
+		{
+			GetMesh()->SetPhysicsAsset(MeshPhsicsDeadAsset);
+		}
+		GetMesh()->SetSimulatePhysics(true);
+
+		RemoveEnemy();
+		IsDead = true;
+
+		AEnemyAIController* AI = Cast<AEnemyAIController>(GetController());
+		if (AI)
+		{
+			AI->IsDead(IsDead);
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("AEnemyType2 :: IsDead True"));
+	}
+
+	return CurrentHP;
 }
 
 //------------------------------------------------------------------------------------

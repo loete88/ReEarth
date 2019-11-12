@@ -42,6 +42,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor> Rocket_Template;
 
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 	//------------------------------------------------------------------------------------
 	void AttackStart_Implementation();
 

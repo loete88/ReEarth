@@ -22,6 +22,7 @@ public:
 	static const FName IsMovePatrolLocEndKey;
 	static const FName IsDestinationActorEndKey;
 	static const FName IsVisibleAttackTargetKey;
+	static const FName IsDeadKey;
 
 	UFUNCTION(BlueprintCallable)
 	void IsAttackEnd(bool Value);
@@ -31,6 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IsDestinationActorEnd(bool Value);
+
+	UFUNCTION(BlueprintCallable)
+	void IsDead(bool Value);
 	
 protected:
 

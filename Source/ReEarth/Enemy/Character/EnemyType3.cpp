@@ -49,6 +49,34 @@ AEnemyType3::AEnemyType3()
 	}
 }
 
+float AEnemyType3::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	CurrentHP -= DamageAmount;
+	UE_LOG(LogTemp, Log, TEXT("AEnemyType3 :: TakeDamage %f"), &CurrentHP);
+
+	if (CurrentHP <= 0)
+	{
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel2, ECollisionResponse::ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Ignore);
+
+		RemoveEnemy();
+		IsDead = true;
+
+		AEnemyAIController* AI = Cast<AEnemyAIController>(GetController());
+		if (AI)
+		{
+			AI->IsDead(IsDead);
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("AEnemyType3 :: IsDead True"));
+	}
+
+	return CurrentHP;
+}
+
+
 //------------------------------------------------------------------------------------
 void AEnemyType3::AttackStart_Implementation()
 {

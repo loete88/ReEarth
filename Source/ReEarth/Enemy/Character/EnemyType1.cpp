@@ -18,7 +18,7 @@ AEnemyType1::AEnemyType1()
 	CurrentHP = MaxHP;
 
 	//--------------------------------------------
-	GetCapsuleComponent()->SetCapsuleHalfHeight(280);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(260);
 	GetCapsuleComponent()->SetCapsuleRadius(180);
 	
 	//--------------------------------------------
@@ -40,6 +40,13 @@ AEnemyType1::AEnemyType1()
 	if (WeaponAsset.Object)
 	{
 		Weapon->SetSkeletalMesh(WeaponAsset.Object);
+	}
+
+	static ConstructorHelpers::FObjectFinder<UPhysicsAsset>PhysicsMeshAsset(
+		TEXT("/Game/AssetContents/ModularSciFiHeroesHP/Mesh/MeshForInternalAnimations/InternalAnim_PhysicsAsset_Dead.InternalAnim_PhysicsAsset_Dead"));
+	if (PhysicsMeshAsset.Object)
+	{
+		MeshPhsicsDeadAsset = PhysicsMeshAsset.Object;
 	}
 }
 
@@ -71,6 +78,39 @@ float AEnemyType1::GetAttackTargetRot()
 		//return Rot.Roll;
 	}
 	return 0.0f;
+}
+
+float AEnemyType1::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+	CurrentHP -= DamageAmount;
+	UE_LOG(LogTemp, Log, TEXT("AEnemyType1 :: TakeDamage %f"), &CurrentHP);
+
+	if (CurrentHP <= 0)
+	{
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel2, ECollisionResponse::ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Ignore);
+			   		
+		if (MeshPhsicsDeadAsset)
+		{
+			GetMesh()->SetPhysicsAsset(MeshPhsicsDeadAsset);
+		}
+		GetMesh()->SetSimulatePhysics(true);
+		
+		RemoveEnemy();
+		IsDead = true;
+
+		AEnemyAIController* AI = Cast<AEnemyAIController>(GetController());
+		if (AI)
+		{
+			AI->IsDead(IsDead);
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("AEnemyType1 :: IsDead True"));
+	}
+
+	return CurrentHP;
 }
 
 //------------------------------------------------------------------------------------

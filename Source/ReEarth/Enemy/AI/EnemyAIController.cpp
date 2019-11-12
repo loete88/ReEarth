@@ -11,6 +11,7 @@ const FName AEnemyAIController::IsAttackEndKey(TEXT("IsAttackEnd"));
 const FName AEnemyAIController::IsMovePatrolLocEndKey(TEXT("IsMovePatrolLocEnd"));
 const FName AEnemyAIController::IsDestinationActorEndKey(TEXT("IsDestinationActorEnd"));
 const FName AEnemyAIController::IsVisibleAttackTargetKey(TEXT("IsVisibleAttackTarget"));
+const FName AEnemyAIController::IsDeadKey(TEXT("IsDead"));
 
 AEnemyAIController::AEnemyAIController()
 {
@@ -26,17 +27,11 @@ AEnemyAIController::AEnemyAIController()
 		BTAsset = BTObject.Object;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("================================="));
-	UE_LOG(LogTemp, Log, TEXT("AEnemyAIController :: Init Success"));
-	UE_LOG(LogTemp, Log, TEXT("================================="));
-
 	if (UseBlackboard(BBAsset, Blackboard))
 	{
 		if (RunBehaviorTree(BTAsset))
 		{
-			UE_LOG(LogTemp, Log, TEXT("================================="));
 			UE_LOG(LogTemp, Log, TEXT("AEnemyAIController :: Init Success"));
-			UE_LOG(LogTemp, Log, TEXT("================================="));
 		}
 	}
 }
@@ -61,3 +56,7 @@ void AEnemyAIController::IsDestinationActorEnd(bool Value)
 	Blackboard->SetValueAsBool(IsDestinationActorEndKey, Value);
 }
 
+void AEnemyAIController::IsDead(bool Value)
+{
+	Blackboard->SetValueAsBool(IsDeadKey, Value);
+}
