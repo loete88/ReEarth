@@ -97,13 +97,16 @@ void AEnemyBase::Tick(float DeltaTime)
 		//원점에 가져다 놓고
 		HomingWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
-		//플레이어를 바라봐야하는 각도 구하기
-		FRotator LookRotator = UKismetMathLibrary::FindLookAtRotation(HomingWidget->GetComponentLocation(), AttackTarget->GetActorLocation());
+		if (AttackTarget)
+		{
+			//플레이어를 바라봐야하는 각도 구하기
+			FRotator LookRotator = UKismetMathLibrary::FindLookAtRotation(HomingWidget->GetComponentLocation(), AttackTarget->GetActorLocation());
 
-		//Aim회전
-		HomingWidget->SetWorldRotation(LookRotator);
-		//앞으로 보내기
-		HomingWidget->SetWorldLocation(HomingWidget->GetComponentLocation()+HomingWidget->GetForwardVector() * 400);
+			//Aim회전
+			HomingWidget->SetWorldRotation(LookRotator);
+			//앞으로 보내기
+			HomingWidget->SetWorldLocation(HomingWidget->GetComponentLocation() + HomingWidget->GetForwardVector() * 400);
+		}
 	}
 
 }
@@ -114,7 +117,12 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyBase::AddEnemy, 1.0f);
+	
+	//Main 맵용 AddEnemy
+	//AddEnemy();
+
+	//테스트 맵용 AddEnemy
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyBase::AddEnemy, 0.1f);
 }
 
 
