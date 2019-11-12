@@ -191,6 +191,15 @@ AActor* AEnemyBase::GetDestinationTarget()
 
 bool AEnemyBase::GetVisibleAttackTarget()
 {
+	if (AttackTarget)
+	{
+		float Dis = GetDistanceTo(AttackTarget);
+		//UE_LOG(LogTemp, Log, TEXT("EnemyBase :: GetVisibleAttackTarget Dis %f"), Dis);
+		if (Dis > 5000)
+		{
+			return false;
+		}
+	}
 	return IsVisibleAttackTarget;
 }
 
