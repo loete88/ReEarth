@@ -97,8 +97,8 @@ APlayerRobot::APlayerRobot()
 	//Seat(플레이어 책상&의자) 생성
 	//---------------------------------------------------------------------------
 	Seat = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Seat"));
-
 	Seat->SetupAttachment(GetMesh(), TEXT("seatposition"));
+	Seat->SetCollisionProfileName(TEXT("Player"));
 	//---------------------------------------------------------------------------
 
 	//LeftHand 생성
