@@ -418,7 +418,9 @@ void APlayerRobot::HomingShot()
 
 		//1-5. UI상 Missile 갯수 줄이기
 		if (MainUIUMG)
+		{
 			MainUIUMG->UpdateRemoveMissile();
+		}
 		
 	}
 	//---------------------------------------------------
@@ -429,8 +431,15 @@ void APlayerRobot::HomingShot()
 	//필요한 & 사용한 변수들 갱신
 	//----------------------------------------------------
 	//Homing Spawn Timer Handle 작동
-	GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
-	UpdateHomingCoolTime();
+	if (!GetWorldTimerManager().IsTimerActive(HomingSpawnTimerHandle))
+	{
+		GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::UpdateHoming, df_HOMINGSPAWN_DURATION, false);
+	}
+	if (!GetWorldTimerManager().IsTimerActive(HomingCoolTimeUITimerHandle))
+	{
+		GetWorldTimerManager().SetTimer(HomingCoolTimeUITimerHandle, this,
+			&APlayerRobot::UpdateHomingCoolTime, df_HOMINGCOOLTIMEUI_UPDATE_DURATION, false);
+	}
 	//TargetArray클리어
 	TargetArray.Empty();
 	//----------------------------------------------------
@@ -824,6 +833,15 @@ void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& Ai
 		}
 	}
 
+}
+
+void APlayerRobot::UpdateHoming()
+{
+	if (CurrentHomingNum < 4)
+	{
+		AddSpawnHoming();
+		GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::UpdateHoming, df_HOMINGSPAWN_DURATION, false);
+	}
 }
 
 void APlayerRobot::UpdateHomingCoolTime()
