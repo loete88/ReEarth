@@ -19,7 +19,9 @@
 #include "Components/InputComponent.h"
 #include "Player/RemoteController/RemoteController.h"
 #include "Game/ReEarth_PC.h"
+#include "Game/ReEarth_GM.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
+
 
 
 // Sets default values
@@ -149,6 +151,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction(TEXT("HomingShot"), IE_Pressed, this, &APlayerPawn::HomingShot);
 
 	PlayerInputComponent->BindAction(TEXT("VRReset"), IE_Pressed, this, &APlayerPawn::VRReset);
+
+	PlayerInputComponent->BindAction(TEXT("StartGame"), IE_Pressed, this, &APlayerPawn::StartGame);
 }
 
 
@@ -287,6 +291,13 @@ void APlayerPawn::HomingShot()
 void APlayerPawn::VRReset()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+}
+
+void APlayerPawn::StartGame()
+{
+	UE_LOG(LogClass, Warning, TEXT("StartGame"));
+	AReEarth_GM * GM = Cast<AReEarth_GM>(UGameplayStatics::GetGameMode(GetWorld()));
+	GM->GameStart();
 }
 
 void APlayerPawn::LockOff()

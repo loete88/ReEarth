@@ -133,6 +133,9 @@ public:
 	//VRReset
 	void VRReset();
 
+	//StartGame();
+	void StartGame();
+
 	//Vr없을 때 테스트할 수 있도록 만든 함수
 	void LockOff();
 	//---------------------------------------------------

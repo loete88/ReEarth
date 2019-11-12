@@ -133,7 +133,7 @@ public:
 	//시야 관련 멤버 변수
 	//---------------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sight")
-	float sightRadius = 60.0f;
+	float sightRadius = 80.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sight")
 	float sightDistance = 600.0f;
@@ -377,5 +377,5 @@ private:
 	//---------------------------------------------
 
 
-
+	bool IsGameStart = false;
 };

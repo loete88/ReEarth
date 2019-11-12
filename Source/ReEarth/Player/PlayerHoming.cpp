@@ -78,6 +78,8 @@ void APlayerHoming::Shot(AEnemyBase * Target)
 
 void APlayerHoming::DoActorBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	UE_LOG(LogClass, Warning, TEXT("TETETE"));
+
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollisionEffect, UKismetMathLibrary::MakeTransform(GetActorLocation(), FRotator(), FVector(4.0f)));
 
 	SendDamage(OtherActor);

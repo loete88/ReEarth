@@ -291,9 +291,7 @@ void APlayerRobot::HomingShot()
 
 
 
-		//선생님이 해주신 부분-------------------------------
-		//선생님이 해주신 부분-------------------------------
-		//선생님이 해주신 부분-------------------------------
+
 		//시야 판정.
 		if (IsEnemyInSight(EnemyArray[iCnt]) == true)
 		{
@@ -302,9 +300,7 @@ void APlayerRobot::HomingShot()
 			//5. 미사일 개수 갱신
 			--CurrentHomingNum;
 		}
-		//선생님이 해주신 부분-------------------------------
-		//선생님이 해주신 부분-------------------------------
-		//선생님이 해주신 부분-------------------------------
+
 
 
 		//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
@@ -405,11 +401,13 @@ void APlayerRobot::HomingShot()
 
 	for (int iCnt = 0; iCnt < iLen; ++iCnt)
 	{
+		//1-2. Play Sound
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReadyHomingSound, GetActorLocation());
+		
 		//1-1. 미사일 Detach
 		HomingArray[0]->GetRootComponent()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 
-		//1-2. Play Sound
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReadyHomingSound, GetActorLocation());
+		TargetArray[iCnt]->HomingOn();
 
 		//1-3. 미사일에게 Shot명령
 		HomingArray[0]->Shot(TargetArray[iCnt]);
@@ -419,10 +417,9 @@ void APlayerRobot::HomingShot()
 		HomingArray.Remove(pTargetHoming);
 
 		//1-5. UI상 Missile 갯수 줄이기
-		MainUIUMG->UpdateRemoveMissile();
-
-
-		TargetArray[iCnt]->HomingOn();
+		if (MainUIUMG)
+			MainUIUMG->UpdateRemoveMissile();
+		
 	}
 	//---------------------------------------------------
 	//Homing Setting
@@ -434,7 +431,6 @@ void APlayerRobot::HomingShot()
 	//Homing Spawn Timer Handle 작동
 	GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
 	UpdateHomingCoolTime();
-
 	//TargetArray클리어
 	TargetArray.Empty();
 	//----------------------------------------------------
@@ -574,6 +570,29 @@ void APlayerRobot::RobotOnSoundPlay()
 
 void APlayerRobot::RobotInit()
 {
+	//돌고 있는 타이머들 중지시키기
+	if (GetWorldTimerManager().IsTimerActive(HomingSpawnTimerHandle))
+	{
+		GetWorldTimerManager().ClearTimer(HomingSpawnTimerHandle);
+	}
+	if (GetWorldTimerManager().IsTimerActive(HomingCoolTimeUITimerHandle))
+	{
+		GetWorldTimerManager().ClearTimer(HomingCoolTimeUITimerHandle);
+	}
+
+
+	IsGameStart = true;
+	EnemyArray.Empty();
+	TargetArray.Empty();
+	HomingArray.Empty();
+
+	InitSpawnHoming();
+
+	CurrentHomingNum = 4;
+
+	MainUIUMG->SetHPBar();
+	MainUIUMG->SetHomingCoolTimeBar();
+	MainUIUMG->UpdateAllMissile();
 }
 
 
@@ -730,9 +749,11 @@ void APlayerRobot::AddSpawnHoming()
 		HomingArray.Add(pNewHoming);
 
 		//UI Update
-		MainUIUMG->UpdateAddMissile();
-
-		GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
+		if (MainUIUMG)
+		{
+			MainUIUMG->UpdateAddMissile();
+			GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
+		}
 	}
 }
 

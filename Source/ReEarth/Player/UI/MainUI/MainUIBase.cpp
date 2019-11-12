@@ -48,7 +48,17 @@ void UMainUIBase::UpdateAddMissile()
 	++iMissileUINum;
 }
 
+void UMainUIBase::UpdateAllMissile()
+{
+	for (int iCnt = 0; iCnt < df_MISSILE_NUM; ++iCnt)
+	{
+		Missile[iCnt]->SetVisibility(ESlateVisibility::Visible);
+	}
+	iMissileUINum = 4;
+}
+
 void UMainUIBase::SetMissileState(ESlateVisibility State, int iIdx)
 {
 	Missile[iIdx]->SetVisibility(State);
 }
+

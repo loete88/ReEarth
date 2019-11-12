@@ -42,6 +42,10 @@ public:
 	UFUNCTION()
 	void UpdateAddMissile();
 
+	UFUNCTION()
+	void UpdateAllMissile();
+
+
 private:
 	//UI를 보여줄지 숨길지 Set해주는 함수------------------
 	void SetMissileState(ESlateVisibility State, int iIdx);
@@ -50,4 +54,5 @@ private:
 	//현재 UI상 미사일 개수
 	int iMissileUINum = 4;
 	//----------------------
+
 };

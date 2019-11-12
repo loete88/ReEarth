@@ -24,6 +24,7 @@ void AReEarth_GM::GameStart()
 	APlayerPawn * Player = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
 	APlayerRobot * PlayerRobot = Player->pRobot;
 	PlayerRobot->SetActorLocation(FVector(7450.0f, -21800.0f, 200.0f));
+	PlayerRobot->RobotInit();
 	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMap"));
 }
 
