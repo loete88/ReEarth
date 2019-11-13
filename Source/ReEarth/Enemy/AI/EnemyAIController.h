@@ -36,12 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void IsDead(bool Value);
 	
-protected:
-
-private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class UBlackboardData* BBAsset;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class UBehaviorTree* BTAsset;
 };

@@ -290,8 +290,6 @@ void APlayerRobot::HomingShot()
 		}
 
 
-
-
 		//시야 판정.
 		if (IsEnemyInSight(EnemyArray[iCnt]) == true)
 		{
@@ -448,6 +446,7 @@ void APlayerRobot::HomingShot()
 
 bool APlayerRobot::IsEnemyInSight(AEnemyBase* targetEnemy)
 {
+	
 	//3. 해당 적과의 거리의 제곱 구하기(크기 비교만하니까 제곱으로)
 	float fDistance = GetSquaredDistanceTo(targetEnemy);
 	//UE_LOG(LogClass, Warning, TEXT("<Distance: %f> / <sightDistance2: %f>"), fDistance, sightDistance * sightDistance);
@@ -658,6 +657,20 @@ void APlayerRobot::Shot(EHandState HandState, bool Left)
 			GetWorldTimerManager().SetTimer(RightShotTimerHandle, this, &APlayerRobot::RightShotCallBack, df_FIRE_DURATION, false);
 		}		
 	}
+
+	//2. 왼쪽인 경우
+	if (Left)
+	{
+		GetWorldTimerManager().ClearTimer(LeftShotTimerHandle);
+	}
+
+	//2. 오른쪽인 경우
+	else
+	{
+		GetWorldTimerManager().ClearTimer(RightShotTimerHandle);
+	}
+
+
 }
 
 void APlayerRobot::InitSpawnHoming()
@@ -764,6 +777,13 @@ void APlayerRobot::AddSpawnHoming()
 			GetWorldTimerManager().SetTimer(HomingSpawnTimerHandle, this, &APlayerRobot::AddSpawnHoming, df_HOMINGSPAWN_DURATION, false);
 		}
 	}
+
+
+	else
+	{
+		GetWorldTimerManager().ClearTimer(HomingSpawnTimerHandle);
+	}
+
 }
 
 void APlayerRobot::UpdateAim(FName SocketName, bool & AimState, ANormalAim *& AimSide,bool IsLeft)
@@ -858,6 +878,7 @@ void APlayerRobot::UpdateHomingCoolTime()
 	else if (CurrentHomingNum == 4)
 	{
 		MainUIUMG->SetHomingCoolTimeBar();
+		GetWorldTimerManager().ClearTimer(HomingCoolTimeUITimerHandle);
 	}
 }
 
@@ -869,4 +890,7 @@ void APlayerRobot::GoToLobby()
 	{
 		GM->GoToLobby();
 	}
+
+	GetWorldTimerManager().ClearTimer(GotoLobbyTimerHandle);
+
 }

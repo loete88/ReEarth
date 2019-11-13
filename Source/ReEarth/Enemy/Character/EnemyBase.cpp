@@ -35,8 +35,8 @@ AEnemyBase::AEnemyBase()
 	HomingWidget->SetDrawSize(FVector2D(700.0f, 700.0f));
 	//HomingWidget->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
-	AIControllerClass = AEnemyAIController::StaticClass();
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	//AIControllerClass = AIController;
+	//AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -55,7 +55,7 @@ void AEnemyBase::Tick(float DeltaTime)
 		TEnumAsByte<ETraceTypeQuery> ObstacleTraceType;
 
 		TArray<AActor*> IgnoreActors;
-		IgnoreActors.Add(this);
+		//IgnoreActors.Add(this);
 			
 		bool IsResult = UKismetSystemLibrary::LineTraceSingle(
 			GetWorld(),

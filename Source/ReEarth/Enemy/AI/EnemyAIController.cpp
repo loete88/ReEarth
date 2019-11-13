@@ -21,19 +21,19 @@ AEnemyAIController::AEnemyAIController()
 		BBAsset = BBObject.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/Enemy/AI/BT_Enemy.BT_Enemy"));
+	/*static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/Enemy/AI/BT_Enemy.BT_Enemy"));
 	if (BTObject.Succeeded())
 	{
 		BTAsset = BTObject.Object;
-	}
+	}*/
 
-	if (UseBlackboard(BBAsset, Blackboard))
-	{
-		if (RunBehaviorTree(BTAsset))
-		{
-			UE_LOG(LogTemp, Log, TEXT("AEnemyAIController :: Init Success"));
-		}
-	}
+	//if (UseBlackboard(BBAsset, Blackboard))
+	//{
+	//	if (RunBehaviorTree(BTAsset))
+	//	{
+	//		UE_LOG(LogTemp, Log, TEXT("AEnemyAIController :: Init Success"));
+	//	}
+	//}
 }
 
 void AEnemyAIController::OnPossess(APawn * InPawn)
