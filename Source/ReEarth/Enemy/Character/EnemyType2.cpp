@@ -146,7 +146,7 @@ void AEnemyType2::AttackStart_Implementation()
 			Rot.Pitch = 0;
 			Rot.Yaw = GetActorRotation().Yaw;
 			FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
-			FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
+			FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(3.0f, 3.0f, 3.0f));
 
 			GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
 		}
@@ -157,7 +157,7 @@ void AEnemyType2::AttackStart_Implementation()
 			Rot.Pitch = 0;
 			Rot.Yaw = GetActorRotation().Yaw;
 			FVector Loc = SocketT.GetLocation() + UKismetMathLibrary::GetForwardVector(Rot) * 50;
-			FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(5.0f, 5.0f, 5.0f));
+			FTransform Trans = UKismetMathLibrary::MakeTransform(Loc, Rot, FVector(3.0f, 3.0f, 3.0f));
 
 			GetWorld()->SpawnActor<AActor>(Rocket_Template, Trans);
 		}
