@@ -31,7 +31,8 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
-	void AddEnemy();
+	void AddEnemyToRobot();
+	void AddEnemyToManager();
 	void RemoveEnemy();
 
 public:
@@ -113,4 +114,14 @@ public:
 	FTimerHandle HomingOffHandle;
 	   
 	//------------------------------------------------------------------------------------
+
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	bool bIsSpawned = false;
+
+
+	void ManagerCreated();
+	void RobotCreated();
+
+
 };

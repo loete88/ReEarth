@@ -43,7 +43,6 @@
 // Sets default values
 APlayerRobot::APlayerRobot()
 {
-	
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -161,7 +160,6 @@ void APlayerRobot::BeginPlay()
 	InitSpawnHoming();
 
 	MainUIUMG = Cast<UMainUIBase>(MainUI->GetUserWidgetObject());
-
 }
 
 // Called every frame
@@ -659,7 +657,7 @@ void APlayerRobot::Shot(EHandState HandState, bool Left)
 	}
 
 	//2. 왼쪽인 경우
-	if (Left)
+	else if (Left)
 	{
 		GetWorldTimerManager().ClearTimer(LeftShotTimerHandle);
 	}

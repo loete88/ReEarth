@@ -118,15 +118,18 @@ void AEnemyBase::BeginPlay()
 
 	FTimerHandle TimerHandle;
 	
-	//Main 맵용 AddEnemy
-	//AddEnemy();
+	//미리 스폰돼있는 애들이 아닐 떄만 Enemy추가 
+	
 
-	//테스트 맵용 AddEnemy
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyBase::AddEnemy, 0.1f);
+	if (!bIsSpawned)
+	{
+		AddEnemyToManager();
+		AddEnemyToRobot();
+	}
+	
 }
 
-
-void AEnemyBase::AddEnemy()
+void AEnemyBase::AddEnemyToRobot()
 {
 	AttackTarget = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (AttackTarget)
@@ -138,6 +141,10 @@ void AEnemyBase::AddEnemy()
 	{
 		UE_LOG(LogTemp, Log, TEXT("EnemyBase :: AddEnemy Fail"));
 	}
+}
+
+void AEnemyBase::AddEnemyToManager()
+{
 	TArray<AActor*> arrOutActors;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStageManager::StaticClass(), arrOutActors);
@@ -254,4 +261,16 @@ void AEnemyBase::HomingOn()
 void AEnemyBase::HomingOff()
 {
 	HomingWidget->SetVisibility(false);
+}
+
+void AEnemyBase::ManagerCreated()
+{
+	if (bIsSpawned)
+		AddEnemyToManager();
+}
+
+void AEnemyBase::RobotCreated()
+{
+	if (bIsSpawned)
+		AddEnemyToRobot();
 }

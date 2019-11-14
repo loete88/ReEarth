@@ -99,8 +99,6 @@ void APlayerPawn::BeginPlay()
 
 	pRobot = GetWorld()->SpawnActor<APlayerRobot>(Robot_Template, GetActorTransform());
 
-
-
 	AttachToComponent(pRobot->GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 			EAttachmentRule::KeepWorld,
@@ -110,6 +108,20 @@ void APlayerPawn::BeginPlay()
 	//--------------------------
 
 	VRReset();
+
+	//미리 스폰돼 있는 애들에게는 생성됐다고 알려서 EnemeyArray에 추가하도록 하자
+	TArray<AActor*> OutActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyBase::StaticClass(), OutActors);
+	for (int iCnt = 0; iCnt < OutActors.Num(); ++iCnt)
+	{
+		AEnemyBase * CurEnemy = Cast<AEnemyBase>(OutActors[iCnt]);
+		if (CurEnemy)
+		{
+			if (CurEnemy->bIsSpawned)
+				CurEnemy->RobotCreated();
+		}
+	}
 
 	//--------------------------------------------------------------------------------
 	
