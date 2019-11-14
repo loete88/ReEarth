@@ -55,7 +55,7 @@ void AEnemyBase::Tick(float DeltaTime)
 		TEnumAsByte<ETraceTypeQuery> ObstacleTraceType;
 
 		TArray<AActor*> IgnoreActors;
-		//IgnoreActors.Add(this);
+		IgnoreActors.Add(this);
 			
 		bool IsResult = UKismetSystemLibrary::LineTraceSingle(
 			GetWorld(),
