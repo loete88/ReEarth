@@ -31,8 +31,10 @@ public:
 	virtual void BeginPlay() override;
 	UFUNCTION(BlueprintCallable)
 	void AddEnemyToRobot();
+
 	UFUNCTION(BlueprintCallable)
 	void AddEnemyToManager();
+	
 	void RemoveEnemy();
 
 	//------------------------------------------------------------------------------------
@@ -78,9 +80,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual float GetAttackTargetRot();
-
-	UFUNCTION(BlueprintCallable)
-	void SetAIControllerRun(bool IsRun);
 	
 	UPhysicsAsset* MeshPhsicsDeadAsset;
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
@@ -102,10 +101,10 @@ public:
 	void RotateAttactTargetLoc();
 	virtual void RotateAttactTargetLoc_Implementation();
 	
-
-	//UPROPERTY(EditAnywhere)
-	//TSubclassOf<class AEnemyAIController> AIController;
-
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetAIControllerRun(bool IsRun);
+	virtual void SetAIControllerRun_Implementation(bool IsRun);
+	
 	//HomingOn함수
 	//Player로부터 유도미사일 Target으로 지정됐을 때 해야할 작업
 	void HomingOn();
@@ -115,8 +114,6 @@ public:
 	FTimerHandle HomingOffHandle;
 	   
 	//------------------------------------------------------------------------------------
-
-
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bIsSpawned = false;
 
@@ -125,6 +122,5 @@ public:
 
 	void ManagerCreated();
 	void RobotCreated();
-
-
+	
 };

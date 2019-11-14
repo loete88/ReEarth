@@ -126,7 +126,7 @@ void AEnemyBase::BeginPlay()
 		AddEnemyToManager();
 		AddEnemyToRobot();
 	}
-	
+	SetAIControllerRun_Implementation(bIsAIControllerRun);
 }
 
 void AEnemyBase::AddEnemyToRobot()
@@ -210,7 +210,7 @@ bool AEnemyBase::GetVisibleAttackTarget()
 	{
 		float Dis = GetDistanceTo(AttackTarget);
 		//UE_LOG(LogTemp, Log, TEXT("EnemyBase :: GetVisibleAttackTarget Dis %f"), Dis);
-		if (Dis > 5000)
+		if (EnableMove && (Dis > 5000))
 		{
 			return false;
 		}
@@ -237,13 +237,17 @@ void AEnemyBase::AttackEnd_Implementation() { }
 
 void AEnemyBase::DeadEnd_Implementation(){ }
 
-//void AEnemyBase::MovePatrolLoc_Implementation() { }
-
-//void AEnemyBase::MoveAttackTarget_Implementation() { }
-
-//void AEnemyBase::MoveDestinationTarget_Implementation(AActor* Target) { }
-
 void AEnemyBase::RotateAttactTargetLoc_Implementation() { }
+
+void AEnemyBase::SetAIControllerRun_Implementation(bool IsRun) 
+{ 
+	AController* AI = GetController();
+	AEnemyAIController* EnemyAI = Cast<AEnemyAIController>(AI);
+	if (EnemyAI)
+	{
+		EnemyAI->IsAIControllerRun(IsRun);
+	}
+}
 
 void AEnemyBase::HomingOn()
 {
@@ -275,6 +279,7 @@ void AEnemyBase::RobotCreated()
 		AddEnemyToRobot();
 }
 
+/*
 void AEnemyBase::SetAIControllerRun(bool IsRun)
 {
 	AController* AI = GetController();
@@ -284,3 +289,4 @@ void AEnemyBase::SetAIControllerRun(bool IsRun)
 		EnemyAI->IsAIControllerRun(IsRun);
 	}
 }
+*/

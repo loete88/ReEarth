@@ -16,25 +16,26 @@ const FName AEnemyAIController::IsAIControllerRunKey(TEXT("IsAIControllerRun"));
 
 AEnemyAIController::AEnemyAIController()
 {
+	/*
 	static ConstructorHelpers::FObjectFinder<UBlackboardData> BBObject(TEXT("/Game/Enemy/AI/BB_Enemy.BB_Enemy"));
 	if (BBObject.Succeeded())
 	{
 		BBAsset = BBObject.Object;
 	}
-
-	/*static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/Enemy/AI/BT_Enemy.BT_Enemy"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/Enemy/AI/BT_Enemy.BT_Enemy"));
 	if (BTObject.Succeeded())
 	{
 		BTAsset = BTObject.Object;
-	}*/
+	}
 
-	//if (UseBlackboard(BBAsset, Blackboard))
-	//{
-	//	if (RunBehaviorTree(BTAsset))
-	//	{
-	//		UE_LOG(LogTemp, Log, TEXT("AEnemyAIController :: Init Success"));
-	//	}
-	//}
+	if (UseBlackboard(BBAsset, Blackboard))
+	{
+		if (RunBehaviorTree(BTAsset))
+		{
+			UE_LOG(LogTemp, Log, TEXT("AEnemyAIController :: Init Success"));
+		}
+	}
+	*/
 }
 
 void AEnemyAIController::OnPossess(APawn * InPawn)
