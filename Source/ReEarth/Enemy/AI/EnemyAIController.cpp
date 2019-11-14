@@ -12,6 +12,7 @@ const FName AEnemyAIController::IsMovePatrolLocEndKey(TEXT("IsMovePatrolLocEnd")
 const FName AEnemyAIController::IsDestinationActorEndKey(TEXT("IsDestinationActorEnd"));
 const FName AEnemyAIController::IsVisibleAttackTargetKey(TEXT("IsVisibleAttackTarget"));
 const FName AEnemyAIController::IsDeadKey(TEXT("IsDead"));
+const FName AEnemyAIController::IsAIControllerRunKey(TEXT("IsAIControllerRun"));
 
 AEnemyAIController::AEnemyAIController()
 {
@@ -59,4 +60,9 @@ void AEnemyAIController::IsDestinationActorEnd(bool Value)
 void AEnemyAIController::IsDead(bool Value)
 {
 	Blackboard->SetValueAsBool(IsDeadKey, Value);
+}
+
+void AEnemyAIController::IsAIControllerRun(bool Value)
+{
+	Blackboard->SetValueAsBool(IsAIControllerRunKey, Value);
 }

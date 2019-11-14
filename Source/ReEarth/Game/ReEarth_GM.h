@@ -32,6 +32,7 @@ public:
 	//GoToLobby함수
 	//----------------------
 	//StartMap으로 이동
+	UFUNCTION(BlueprintCallable)
 	void GoToLobby();
 	//----------------------
 

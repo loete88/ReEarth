@@ -28,15 +28,13 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-
 	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable)
 	void AddEnemyToRobot();
+	UFUNCTION(BlueprintCallable)
 	void AddEnemyToManager();
 	void RemoveEnemy();
 
-public:
-	   
 	//------------------------------------------------------------------------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class APlayerPawn* AttackTarget;
@@ -80,6 +78,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual float GetAttackTargetRot();
+
+	UFUNCTION(BlueprintCallable)
+	void SetAIControllerRun(bool IsRun);
 	
 	UPhysicsAsset* MeshPhsicsDeadAsset;
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
@@ -119,6 +120,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bIsSpawned = false;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	bool bIsAIControllerRun = true;
 
 	void ManagerCreated();
 	void RobotCreated();

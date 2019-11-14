@@ -36,6 +36,7 @@ void AStageManager::BeginPlay()
 			}
 		}
 	}
+	EnemyArray.Empty();
 }
 
 // Called every frame
@@ -59,16 +60,18 @@ void AStageManager::StartStage(int num)
 
 	CurrentStage = num;
 
-	SpawnedBarrier = GetWorld()->SpawnActor<AActor>(StageIndex[CurrentStage].Barrier, StageIndex[CurrentStage].BarrierTransform);
-	Cast<AStageBarrier>(SpawnedBarrier)->BarrierSize = StageIndex[CurrentStage].BarrierSize;
-	Cast<AStageBarrier>(SpawnedBarrier)->CreateBarrier();
-
 	if (Wave == 0)
 	{
 		for (int i = 0; i < EnemyArray.Num(); i++)
 		{
-			Destroy(EnemyArray[i]);
+			EnemyArray[i]->RemoveEnemy();
+			EnemyArray[i]->Destroy();
 		}
+		EnemyArray.Empty();
+
+		SpawnedBarrier = GetWorld()->SpawnActor<AActor>(StageIndex[CurrentStage].Barrier, StageIndex[CurrentStage].BarrierTransform);
+		Cast<AStageBarrier>(SpawnedBarrier)->BarrierSize = StageIndex[CurrentStage].BarrierSize;
+		Cast<AStageBarrier>(SpawnedBarrier)->CreateBarrier();
 	}
 
 	if (!StageIndex[CurrentStage].sequenceInfo[Wave].isPlay)
@@ -77,8 +80,8 @@ void AStageManager::StartStage(int num)
 		StageIndex[CurrentStage].sequenceInfo[Wave].LevelSequencePlayer->Play();
 	}
 
-	float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(StageIndex[CurrentStage].sequenceInfo[Wave].LevelSequencePlayer->GetEndTime());
-	GetWorldTimerManager().SetTimer(SequenceEndTimerHandle, this, &AStageManager::PlayStage, endTime, false);
+	//float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(StageIndex[CurrentStage].sequenceInfo[Wave].LevelSequencePlayer->GetEndTime());
+	GetWorldTimerManager().SetTimer(SequenceEndTimerHandle, this, &AStageManager::PlayStage, 1.f, false);
 }
 
 void AStageManager::PlayStage()

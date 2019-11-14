@@ -43,8 +43,8 @@ public:
 	//-----------------------------
 
 private:
-
 	//수집된 적
+	UPROPERTY()
 	TArray<AEnemyBase*> EnemyArray;
 
 	//시퀀스 끝나는 시간

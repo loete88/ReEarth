@@ -23,6 +23,7 @@ public:
 	static const FName IsDestinationActorEndKey;
 	static const FName IsVisibleAttackTargetKey;
 	static const FName IsDeadKey;
+	static const FName IsAIControllerRunKey;
 
 	UFUNCTION(BlueprintCallable)
 	void IsAttackEnd(bool Value);
@@ -35,6 +36,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IsDead(bool Value);
+
+	UFUNCTION(BlueprintCallable)
+	void IsAIControllerRun(bool Value);
 	
 	UPROPERTY(EditAnywhere)
 	class UBlackboardData* BBAsset;

@@ -274,3 +274,13 @@ void AEnemyBase::RobotCreated()
 	if (bIsSpawned)
 		AddEnemyToRobot();
 }
+
+void AEnemyBase::SetAIControllerRun(bool IsRun)
+{
+	AController* AI = GetController();
+	AEnemyAIController* EnemyAI = Cast<AEnemyAIController>(AI);
+	if (EnemyAI)
+	{
+		EnemyAI->IsAIControllerRun(IsRun);
+	}
+}
