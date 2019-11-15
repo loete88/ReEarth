@@ -97,8 +97,11 @@ float AEnemyType1::TakeDamage(float DamageAmount, FDamageEvent const & DamageEve
 		{
 			GetMesh()->SetPhysicsAsset(MeshPhsicsDeadAsset);
 		}
+
 		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->AddRadialForce(GetMesh()->GetComponentLocation(), 500.0f, 99900000.0f, ERadialImpulseFalloff::RIF_Constant);
 		
+
 		RemoveEnemy();
 		IsDead = true;
 

@@ -7,6 +7,7 @@
 #include "TimeManagement\Public\TimeManagementBlueprintLibrary.h"
 #include "TimerManager.h"
 #include "Map\StageBarrier.h"
+#include "Kismet\GameplayStatics.h"
 
 // Sets default values
 AStageManager::AStageManager()
@@ -37,6 +38,19 @@ void AStageManager::BeginPlay()
 		}
 	}
 	EnemyArray.Empty();
+
+	TArray<AActor*> OutActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyBase::StaticClass(), OutActors);
+	for (int iCnt = 0; iCnt < OutActors.Num(); ++iCnt)
+	{
+		AEnemyBase * CurEnemy = Cast<AEnemyBase>(OutActors[iCnt]);
+		if (CurEnemy)
+		{
+			if (CurEnemy->bIsSpawned)
+				CurEnemy->ManagerCreated();
+		}
+	}
 }
 
 // Called every frame
@@ -62,12 +76,19 @@ void AStageManager::StartStage(int num)
 
 	if (Wave == 0)
 	{
-		for (int i = 0; i < EnemyArray.Num(); i++)
-		{
-			EnemyArray[i]->RemoveEnemy();
-			EnemyArray[i]->Destroy();
-		}
-		EnemyArray.Empty();
+		//for (int i = EnemyArray.Num()-1; i >= 0; --i)
+		//{
+		//	if (EnemyArray[i])
+		//	{
+		//		if (EnemyArray[i]->CurrentHP <= 0)
+		//		{
+		//			EnemyArray[i]->Destroy();
+		//			EnemyArray.RemoveAt(i);
+		//		}
+		//	}
+		//	else
+		//		UE_LOG(LogClass, Warning, TEXT("Nul"));
+		//}
 
 		SpawnedBarrier = GetWorld()->SpawnActor<AActor>(StageIndex[CurrentStage].Barrier, StageIndex[CurrentStage].BarrierTransform);
 		Cast<AStageBarrier>(SpawnedBarrier)->BarrierSize = StageIndex[CurrentStage].BarrierSize;
@@ -81,7 +102,7 @@ void AStageManager::StartStage(int num)
 	}
 
 	//float endTime = UTimeManagementBlueprintLibrary::Conv_QualifiedFrameTimeToSeconds(StageIndex[CurrentStage].sequenceInfo[Wave].LevelSequencePlayer->GetEndTime());
-	GetWorldTimerManager().SetTimer(SequenceEndTimerHandle, this, &AStageManager::PlayStage, 1.f, false);
+	GetWorldTimerManager().SetTimer(SequenceEndTimerHandle, this, &AStageManager::PlayStage, 5, false);
 }
 
 void AStageManager::PlayStage()
@@ -91,7 +112,7 @@ void AStageManager::PlayStage()
 	bool EnemyStillAlive = false;
 	for (int i = 0; i < EnemyArray.Num(); i++)
 	{
-		if (!EnemyArray[i]->IsDead)
+		if (!EnemyArray[i]->IsDead && EnemyArray[i]->bIsAIControllerRun)
 		{
 			EnemyStillAlive = true;
 			break;
@@ -100,12 +121,31 @@ void AStageManager::PlayStage()
 
 	if (!EnemyStillAlive)
 	{
+		// 다음 스테이지로 넘어감
+		UE_LOG(LogTemp, Warning, TEXT("if"));
 		Wave++;
 		//Check Remain Stage
 		if (Wave == StageIndex[CurrentStage].sequenceInfo.Num())
 			EndStage();
 		else
+		{
+			//여기
+			for (int i = EnemyArray.Num()-1; i >= 0; --i)
+			{
+				if (EnemyArray[i])
+				{
+					if (EnemyArray[i]->CurrentHP <= 0)
+					{
+						EnemyArray[i]->Destroy();
+						EnemyArray.RemoveAt(i);
+					}
+				}
+				else
+					UE_LOG(LogClass, Warning, TEXT("Nul"));
+			}
+
 			StartStage(CurrentStage);
+		}
 	}
 	else
 		GetWorldTimerManager().SetTimer(CheckAliveEnemyHandle, this, &AStageManager::PlayStage, 2, false);

@@ -270,6 +270,9 @@ public:
 	//RobotInit
 	void RobotInit();
 
+	//Target으로 가능한 Enemy Array
+	TArray<AEnemyBase*>	EnemyArray;
+
 
 private:
 	//총 발사시 텀을 주기위한 Handle---------------
@@ -303,8 +306,8 @@ private:
 	//유도 미사일 관련 private변수-----------------
 	TArray<class APlayerHoming*> HomingArray;
 
-	//Target으로 가능한 Enemy Array
-	TArray<AEnemyBase*>	EnemyArray;
+	////Target으로 가능한 Enemy Array
+	//TArray<AEnemyBase*>	EnemyArray;
 
 	//Target으로할 Enemy Array
 	TArray<AEnemyBase*>	TargetArray;

@@ -112,14 +112,17 @@ float AEnemyType2::TakeDamage(float DamageAmount, FDamageEvent const & DamageEve
 		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+
 		if (MeshPhsicsDeadAsset)
 		{
 			GetMesh()->SetPhysicsAsset(MeshPhsicsDeadAsset);
 		}
+		
 		GetMesh()->SetSimulatePhysics(true);
 
 		RemoveEnemy();
 		IsDead = true;
+
 
 		AEnemyAIController* AI = Cast<AEnemyAIController>(GetController());
 		if (AI)

@@ -119,10 +119,11 @@ void APlayerPawn::BeginPlay()
 		if (CurEnemy)
 		{
 			if (CurEnemy->bIsSpawned)
+			{
 				CurEnemy->RobotCreated();
+			}
 		}
 	}
-
 	//--------------------------------------------------------------------------------
 	
 }

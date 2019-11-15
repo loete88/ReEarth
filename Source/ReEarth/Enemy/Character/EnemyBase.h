@@ -44,7 +44,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EEnemyState State;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHP = 100;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

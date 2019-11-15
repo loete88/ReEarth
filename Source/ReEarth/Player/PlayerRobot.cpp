@@ -274,7 +274,6 @@ void APlayerRobot::HomingShot()
 {
 	int iLen = EnemyArray.Num();
 
-
 	//TargetArray Setting
 	//--------------------------------------------------
 	//1. 전체 EnemyArray 순환
@@ -528,7 +527,6 @@ void APlayerRobot::DamageProc(float Damage)
 
 	//UI HP Bar 갱신
 	MainUIUMG->SetHPBar(HPRate);
-
 	//UI HP Bar 갱신
 
 
@@ -536,6 +534,7 @@ void APlayerRobot::DamageProc(float Damage)
 	//죽은경우
 	if (CurrentHP == 0)
 	{
+		UE_LOG(LogClass, Warning, TEXT("TETETETE"));
 		ALevelSequenceActor * Temp;
 		//Fade Out 실행
 		ULevelSequencePlayer * LSP = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(),
@@ -588,7 +587,7 @@ void APlayerRobot::RobotInit()
 
 
 	IsGameStart = true;
-	EnemyArray.Empty();
+	//EnemyArray.Empty();
 	TargetArray.Empty();
 	HomingArray.Empty();
 

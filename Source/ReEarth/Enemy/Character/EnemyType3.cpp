@@ -60,7 +60,7 @@ float AEnemyType3::TakeDamage(float DamageAmount, FDamageEvent const & DamageEve
 	{
 		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 		GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		Gun->SetRelativeLocation(FVector(50, 50, 280));
 		Gun->AddRelativeRotation(FRotator(45, 0, 45));

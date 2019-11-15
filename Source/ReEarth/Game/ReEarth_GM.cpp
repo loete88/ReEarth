@@ -15,6 +15,7 @@ void AReEarth_GM::BeginPlay()
 	//----------------------------------------------------------------
 	UStereoLayerFunctionLibrary::EnableAutoLoadingSplashScreen(true);
 	UStereoLayerFunctionLibrary::SetSplashScreen(LoadTexture);
+	
 	UStereoLayerFunctionLibrary::HideSplashScreen();
 	//----------------------------------------------------------------
 }
@@ -22,9 +23,10 @@ void AReEarth_GM::BeginPlay()
 void AReEarth_GM::GameStart()
 {
 	APlayerPawn * Player = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
-	APlayerRobot * PlayerRobot = Player->pRobot;
-	PlayerRobot->SetActorLocation(FVector(7450.0f, -21800.0f, 200.0f));
-	PlayerRobot->RobotInit();
+	APlayerRobot * PlayerRobot = Player->pRobot; 
+	PlayerRobot->SetActorLocation(FVector(8650.000000, -23800.000000, 200.0f));
+	PlayerRobot->SetActorRotation(FRotator(0.0f, 90.0f, 0.0));
+		PlayerRobot->RobotInit();
 	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMap"));
 }
 
@@ -41,7 +43,11 @@ void AReEarth_GM::GoToLobby()
 	APlayerRobot * PlayerRobot = Player->pRobot;
 
 
-	PlayerRobot->SetActorLocation(FVector(94840.000000, -19607.250000f, 1122.021729f));
 	PlayerRobot->RobotInit();
+
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMap"));
+
+
+	//PlayerRobot->SetActorLocation(FVector(94840.000000, -19607.250000f, 1122.021729f));
 	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestStart"));
 }

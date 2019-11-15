@@ -51,7 +51,8 @@ APlayerHoming::APlayerHoming()
 void APlayerHoming::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//SetLifeSpan(4.0f);
 }
 
 // Called every frame
